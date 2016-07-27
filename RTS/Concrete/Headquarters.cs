@@ -8,9 +8,16 @@ using RTS.Abstract;
 
 namespace RTS.Concrete
 {
-    class Headquarters:GameObject
+    public class ObjectBuild
     {
-        public List<GameObject> HQLoad = new List<GameObject>();
+        public GameObject gameObject;
+        public int buildState = 0;
+        public int maxBuild = 100;
+    }
+    public class Headquarters:GameObject
+    {
+        public List<ObjectBuild> HQBuildList = new List<ObjectBuild>();
+        private ObjectBuild currentBuild;
         private bool Created = false;
         public Headquarters()
         {
@@ -20,22 +27,33 @@ namespace RTS.Concrete
             size = new Point(50,30);
         }
 
-        public void AddLoad(GameObject obj)
+        public void AddBuild(GameObject obj)
         {
-            HQLoad.Add(obj);
+            ObjectBuild build = new ObjectBuild()
+            {
+                gameObject=obj
+            };
+            HQBuildList.Add(build);
         }
 
         public override void Update()
         {
-            if (isSelected == true)
+            if (currentBuild == null&&HQBuildList.Count>0)
             {
-                if (Created != false) return;
-                Container.CreateNewObject(typeof(Worker), Coords + new Vector2(50, -50), Owner);
-                Created = true;
+                currentBuild = HQBuildList[0];
+                HQBuildList.Remove(currentBuild);
+                currentBuild.buildState = 0;
+                return;
             }
-            else
+            if (currentBuild != null)
             {
-                Created = false;
+                currentBuild.buildState += 1;
+                if (currentBuild.buildState == currentBuild.maxBuild)
+                {
+                    Type type = currentBuild.gameObject.GetType();
+                    Container.CreateNewObject(type, Container.SelectedGameObject.Coords + new Vector2(50, -50), Owner);
+                    currentBuild = null;
+                }
             }
         }
     }

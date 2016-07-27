@@ -11,7 +11,7 @@ namespace RTS.Mechanics
     {
         public Rectangle area;
         public Action function;
-
+        public bool isClicked = false;
         public ClickableArea()
         {
             
@@ -36,11 +36,21 @@ namespace RTS.Mechanics
         {
             foreach (var obj in list)
             {
-                if (obj.area.Contains(mousePoint))
+                if (obj.area.Contains(mousePoint)&&obj.isClicked==false)
                 {
+                    obj.isClicked = true;
                     obj.function?.Invoke();
                 }
+                if (obj.area.Contains(mousePoint) == false)
+                {
+                    obj.isClicked = false;
+                }
             }
+        }
+
+        public void RemoveAreas()
+        {
+            list.Clear();
         }
     }
 }

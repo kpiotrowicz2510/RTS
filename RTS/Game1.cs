@@ -20,13 +20,14 @@ namespace RTS
         private GameManager manager;
         private CollisionControl collisionControl;
         private Camera2D _camera;
+        private bool clicked = false;
 
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
-           // graphics.IsFullScreen = true;
+            //graphics.IsFullScreen = true;
             //graphics.PreferredBackBufferHeight = 768;
-           // graphics.PreferredBackBufferWidth = 1366;
+            //graphics.PreferredBackBufferWidth = 1366;
             Content.RootDirectory = "Content";
         }
         
@@ -55,6 +56,7 @@ namespace RTS
                 manager = manager,
                 currentPlayer = manager.Players.GetCurrentPlayer()
             };
+            hud.init();
         }
 
         protected override void UnloadContent()
@@ -93,8 +95,13 @@ namespace RTS
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
             var mouseState = Mouse.GetState();
-            if (mouseState.LeftButton == ButtonState.Pressed)
+            if (mouseState.LeftButton == ButtonState.Released&&clicked==true)
             {
+                clicked = false;
+            }
+            if (mouseState.LeftButton == ButtonState.Pressed&&clicked==false)
+            {
+                clicked = true;
                 manager.Container.SelectGameObjectAtPoint(mouseState.X, mouseState.Y, manager.Players.GetCurrentPlayer());
                 if(manager.Container.SelectedGameObject!=null) manager.ClickableAreas.CheckAreas(mouseState.Position);
             }

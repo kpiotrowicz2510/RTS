@@ -15,6 +15,7 @@ namespace RTS.Concrete
         public ObjectContainer Container;
         public PlayerManager Players;
         public ClickableAreas ClickableAreas;
+        public Headquarters Headquarters;
         public GameManager()
         {
             Container = new ObjectContainer();  
@@ -48,7 +49,7 @@ namespace RTS.Concrete
                 Coords = new Vector2(20, 400)
             };
             Container.AddObject("HQ", HQ, Players.GetCurrentPlayer());
-
+            Headquarters = HQ;
         }
 
         public void UpdateOrganisms(GameObject obj=null)

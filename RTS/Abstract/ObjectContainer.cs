@@ -100,6 +100,7 @@ namespace RTS.Abstract
             obj.targetCoords = pos;
             obj.name = type.BaseType + "" + objectCount++;
             Objects.Add(obj.name,obj);
+            owner.properties["Objects"]++;
             return obj;
         }
 

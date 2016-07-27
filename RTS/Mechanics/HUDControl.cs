@@ -20,9 +20,15 @@ namespace RTS.Mechanics
         public GraphicsDeviceManager graphics;
         public Camera2D camera;
         public GameManager manager;
+        public Vector2 hudPosition;
         public HUDControl()
         {
             
+        }
+
+        public void init()
+        {
+            hudPosition = camera.Position + new Vector2(0, graphics.PreferredBackBufferHeight * 0.8f);
         }
 
         public void DrawHUD()
@@ -34,7 +40,7 @@ namespace RTS.Mechanics
             }
             var rect = new Texture2D(graphicsDevice, 1, 1);
             rect.SetData(new[] { Color.Black });
-            Vector2 hudPosition = camera.Position + new Vector2(0, graphics.PreferredBackBufferHeight * 0.8f);
+            hudPosition = camera.Position + new Vector2(0, graphics.PreferredBackBufferHeight * 0.8f);
             spriteBatch.Draw(rect, camera.Position+new Vector2(0,0),new Rectangle(0,0,graphics.PreferredBackBufferWidth, 30),Color.Black);
             spriteBatch.DrawString(spriteFont, info, camera.Position + posPoint +new Vector2(10,5),Color.White);
             
@@ -47,33 +53,35 @@ namespace RTS.Mechanics
             rect.SetData(new[] { Color.Blue });
             spriteBatch.Draw(rect, hudPosition + new Vector2(graphics.PreferredBackBufferWidth - 200, 10), new Rectangle(0, 0, 50, 50), Color.White);
 
+
+            rect.SetData(new[] { Color.Blue });
+            spriteBatch.Draw(rect, hudPosition + new Vector2(graphics.PreferredBackBufferWidth - 130, 10), new Rectangle(0, 0, 50, 50), Color.White);
+            manager.ClickableAreas.RemoveAreas();
             ClickableArea area1 = new ClickableArea()
             {
-                area = new Rectangle((hudPosition + new Vector2(graphics.PreferredBackBufferWidth - 200, 10)).ToPoint(), new Point(50,50)),
+                area = new Rectangle((hudPosition + new Vector2(graphics.PreferredBackBufferWidth - 200, 10)).ToPoint(), new Point(50, 50)),
                 function = NewWorker
             };
             manager.ClickableAreas.AddArea(area1);
 
-            rect.SetData(new[] { Color.Blue });
-            spriteBatch.Draw(rect, hudPosition + new Vector2(graphics.PreferredBackBufferWidth - 130, 10), new Rectangle(0, 0, 50, 50), Color.White);
             ClickableArea area2 = new ClickableArea()
             {
                 area = new Rectangle((hudPosition + new Vector2(graphics.PreferredBackBufferWidth - 130, 10)).ToPoint(), new Point(50, 50)),
                 function = NewFighter
             };
             manager.ClickableAreas.AddArea(area2);
+
             //draw objectinfo
         }
 
         public void NewWorker()
         {
-            manager.Container.CreateNewObject(typeof(Worker), manager.Container.SelectedGameObject.Coords + new Vector2(50, -50), manager.Players.GetCurrentPlayer());
+            
+            manager.Headquarters.AddBuild(new Worker());
         }
         public void NewFighter()
         {
-            manager.Container.CreateNewObject(
-                typeof(Fighter),
-                manager.Container.SelectedGameObject.Coords + new Vector2(50, -50), manager.Players.GetCurrentPlayer());
+            manager.Headquarters.AddBuild(new Fighter());
         }
     }
 }
