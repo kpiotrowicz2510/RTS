@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
@@ -36,6 +37,7 @@ namespace RTS.Abstract
             properties["Armor"] = 10;
             properties["SightLine"] = 20;
             properties["BuildCost"] = 100;
+            properties["LiveTime"] = -100;
             size = new Point(10,10);
             isSelected = false;
         }
@@ -47,7 +49,7 @@ namespace RTS.Abstract
 
         public virtual void Update()
         {
-            if (Vector2.Distance(this.targetCoords, this.Coords) > 10)
+            if (Vector2.Distance(this.targetCoords, this.Coords) > 2)
             {
                 float xMove = targetCoords.X - Coords.X;
                 float yMove = targetCoords.Y - Coords.Y;
@@ -66,6 +68,10 @@ namespace RTS.Abstract
             {
                 Container.DeleteObject(this);
             }
+            if (properties["LiveTime"]!=-100&&properties["LiveTime"]-- < 0)
+            {
+                Container.DeleteObject(this);
+            }
         }
 
         public virtual void Draw(SpriteBatch spriteBatch, GraphicsDevice graphicsDevice, SpriteFont font, Player currentPlayer)
@@ -78,6 +84,14 @@ namespace RTS.Abstract
             //    spriteBatch.DrawString(font, prop.Key+":"+prop.Value, new Vector2((int)Coords.X, (int)Coords.Y - 100+i), Color.Black);
             //    i += 10;
             //}
+            if (0 == 1)
+            {
+                rect.SetData(new[] { new Color(Color.Yellow, 10) });
+                Rectangle area = new Rectangle((int) Coords.X - properties["SightLine"],
+                    (int) Coords.Y - properties["SightLine"], size.X + properties["SightLine"]*2,
+                    size.Y + properties["SightLine"]*2);
+                spriteBatch.Draw(rect, area, Color.Green);
+            }
             if (isSelected)
             {
                 spriteBatch.Draw(rect, new Rectangle(new Point((int)(Coords.X-2), (int)(Coords.Y-2)), new Point(size.X+4, size.Y+4)), Color.Green);

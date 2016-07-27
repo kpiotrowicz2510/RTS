@@ -28,6 +28,25 @@ namespace RTS.Abstract
         {
             return Objects[name];
         }
+
+        public GameObject CheckBullet(GameObject obj1)
+        {
+            foreach (var obj in Objects)
+            {
+                if (obj.Value.GetType() == obj1.GetType()) continue;
+                Rectangle area = new Rectangle((int) obj.Value.Coords.X,
+                    (int) obj.Value.Coords.Y,
+                    obj.Value.size.X,
+                    obj.Value.size.Y);
+                if (area.Contains(obj1.Coords.X, obj1.Coords.Y)&&obj.Value.Owner!=obj1.Owner)
+                {
+                    return obj.Value;
+                }
+                
+            }
+            return null;
+        }
+
         public GameObject CheckCollision(GameObject obj1, Type obj2=null)
         {
             foreach (var obj in Objects)
@@ -53,9 +72,9 @@ namespace RTS.Abstract
             return null;
         }
 
-        public GameObject SelectGameObjectAtArea(Rectangle area)
+        public GameObject SelectGameObjectAtArea(Rectangle area, Player player)
         {
-            foreach (var obj in Objects)
+            foreach (var obj in Objects.Where(o=>o.Value.Owner!=player))
             {
                 if (area.Contains(new Rectangle((int) obj.Value.Coords.X, (int)obj.Value.Coords.Y, obj.Value.size.X,
                         obj.Value.size.Y)))
@@ -107,6 +126,8 @@ namespace RTS.Abstract
         public void DeleteObject(GameObject obj)
         {
             Objects.Remove(obj.name);
+            obj = null;
+            GC.Collect();
         }
         public IEnumerable<GameObject> ReturnGameObjectsOfType(Type type)
         {

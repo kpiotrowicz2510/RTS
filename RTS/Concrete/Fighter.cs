@@ -26,8 +26,8 @@ namespace RTS.Concrete
         public override void Update()
         {
             Rectangle area = new Rectangle((int)Coords.X - properties["SightLine"], (int)Coords.Y - properties["SightLine"], size.X + properties["SightLine"]*2, size.Y + properties["SightLine"]*2);
-            var obj = Container.SelectGameObjectAtArea(area);
-            if (obj.Owner != Owner)
+            var obj = Container.SelectGameObjectAtArea(area, Owner);
+            if (obj!=null&&obj.Owner != Owner)
             {
                 if (canShoot)
                 {
@@ -52,7 +52,7 @@ namespace RTS.Concrete
         {
             var bullet = Container.CreateNewObject(typeof(Bullet), Coords, Owner);
             bullet.target = this;
-            bullet.targetCoords = obj.Coords+new Vector2(5,5);
+            bullet.targetCoords = obj.Coords+new Vector2(2,2);
         }
     }
 }

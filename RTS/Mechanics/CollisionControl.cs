@@ -73,8 +73,8 @@ namespace RTS.Mechanics
         {
             foreach (var obj in manager.Container.ReturnGameObjectsOfType(typeof(Bullet)))
             {
-                var obj2 = manager.Container.CheckCollision(obj, null);
-                if (obj2 != null&&obj2!=obj.target)
+                var obj2 = manager.Container.CheckBullet(obj);
+                if (obj2 != null)
                 {
                     obj2.properties["Health"] -= obj.properties["Damage"] - obj2.properties["Armor"]/10;
                     manager.Container.DeleteObject(obj);
