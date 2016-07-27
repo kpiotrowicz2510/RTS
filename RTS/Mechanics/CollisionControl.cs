@@ -16,6 +16,7 @@ namespace RTS.Mechanics
         public CollisionControl(Concrete.GameManager man)
         {
             manager = man;
+            actionList.Add(BulletAttack);
             actionList.Add(MiningWorker);
             actionList.Add(HQWorker);
         }
@@ -64,6 +65,19 @@ namespace RTS.Mechanics
                     {
                         worker.actionControl.CancelActions();
                     }
+                }
+            }
+        }
+
+        private void BulletAttack()
+        {
+            foreach (var obj in manager.Container.ReturnGameObjectsOfType(typeof(Bullet)))
+            {
+                var obj2 = manager.Container.CheckCollision(obj, null);
+                if (obj2 != null&&obj2!=obj.target)
+                {
+                    obj2.properties["Health"] -= obj.properties["Damage"] - obj2.properties["Armor"]/10;
+                    manager.Container.DeleteObject(obj);
                 }
             }
         }

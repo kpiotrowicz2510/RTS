@@ -15,8 +15,10 @@ namespace RTS.Abstract
     {
         public GameObject target;
         public int id;
+        public string name;
         public Color texture;
         protected int speed;
+        public ObjectContainer Container;
         public bool PlatformCollision { get; set; }
         public int OwnerID { get; set; }
         public Player Owner { get; set; }
@@ -56,6 +58,10 @@ namespace RTS.Abstract
                 {
                     this.targetCoords = new Vector2(targetPoint.X, targetPoint.Y);
                 }
+            }
+            if (properties["Health"] < 0)
+            {
+                Container.DeleteObject(this);
             }
         }
 

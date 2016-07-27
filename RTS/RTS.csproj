@@ -42,6 +42,8 @@
     <Compile Include="Abstract\Enemy.cs" />
     <Compile Include="Abstract\GameObject.cs" />
     <Compile Include="Abstract\ObjectContainer.cs" />
+    <Compile Include="Concrete\Bullet.cs" />
+    <Compile Include="Concrete\Fighter.cs" />
     <Compile Include="Concrete\GameManager.cs" />
     <Compile Include="Concrete\GoldMine.cs" />
     <Compile Include="Concrete\Headquarters.cs" />

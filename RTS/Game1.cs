@@ -30,7 +30,6 @@ namespace RTS
             // TODO: Add your initialization logic here
             manager = new GameManager();
             collisionControl = new CollisionControl(manager);
-            manager.Container.SelectedGameObject = manager.Container.GetGameObject("Worker1");
             base.Initialize();
         }
 
@@ -60,11 +59,14 @@ namespace RTS
             var mouseState = Mouse.GetState();
             if (mouseState.LeftButton == ButtonState.Pressed)
             {
-                manager.Container.SelectGameObjectAtPoint(mouseState.X, mouseState.Y);
+                manager.Container.SelectGameObjectAtPoint(mouseState.X, mouseState.Y, manager.Players.GetCurrentPlayer());
             }
-            if (mouseState.RightButton == ButtonState.Pressed)
+            if (mouseState.RightButton == ButtonState.Pressed&&Keyboard.GetState().IsKeyDown(Keys.LeftControl))
             {
                 manager.Container.SelectedGameObject.actionControl.AddGoPoint(new Point(mouseState.X, mouseState.Y));
+            }else if (mouseState.RightButton == ButtonState.Pressed)
+            {
+                manager.Container.SelectedGameObject.targetCoords = new Vector2(mouseState.X,mouseState.Y);
             }
 
             manager.UpdateOrganisms();

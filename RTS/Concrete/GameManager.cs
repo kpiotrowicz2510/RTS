@@ -23,27 +23,14 @@ namespace RTS.Concrete
 
         private void Initialize()
         {
+            Players.AddNewPlayer("michu");
             Players.AddNewPlayer("kris");
-            var worker = new Worker
-            {
-                texture = Color.Aqua,
-                Coords = new Vector2(0, 10),
-                CurrentJob = Job.DONE
-            };
-            worker.move(new Vector2(120, 50), 500);
-            
-            Container.AddObject("Worker1",worker,Players.GetCurrentPlayer());
 
-            var worker2 = new Worker
-            {
-                texture = Color.AliceBlue,
-                Coords = new Vector2(0, 10),
-                CurrentJob = Job.DONE
-            };
-            worker2.move(new Vector2(120, 150), 500);
-            
-            Container.AddObject("Worker2", worker2, Players.GetCurrentPlayer());
+            Container.CreateNewObject(typeof(Worker), new Vector2(120, 50), Players.GetCurrentPlayer());
+            Container.CreateNewObject(typeof(Worker), new Vector2(200, 0), Players.GetCurrentPlayer());
 
+            Container.CreateNewObject(typeof(Worker), new Vector2(600, 350), Players.GetCurrentPlayer("michu"));
+            Container.CreateNewObject(typeof(Fighter), new Vector2(200,200), Players.GetCurrentPlayer());
 
             var mine = new GoldMine(1000)
             {

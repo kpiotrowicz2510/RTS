@@ -17,10 +17,11 @@ namespace RTS.Concrete
            
        }
 
-       public Player GetCurrentPlayer()
+       public Player GetCurrentPlayer(string id=null)
        {
-           return players[CurrentPlayerID];
+           return id!=null ? players[id] : players[CurrentPlayerID];
        }
+
        public void AddNewPlayer(string name)
        {
            CurrentPlayerID = name;

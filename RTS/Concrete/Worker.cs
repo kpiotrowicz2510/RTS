@@ -17,6 +17,9 @@ namespace RTS.Concrete
         {
             properties["CurrentWeight"] = 0;
             properties["MaxWeight"] = 10;
+            texture = Color.AliceBlue;
+            CurrentJob = Job.DONE;
+            speed = 200;
         }
     }
 }
