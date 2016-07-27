@@ -1,8 +1,10 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System.Net.Mime;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using RTS.Abstract;
 using RTS.Concrete;
+using RTS.Mechanics;
 
 namespace RTS
 {
@@ -15,7 +17,7 @@ namespace RTS
         SpriteBatch spriteBatch;
         SpriteFont spriteFont;
         private GameManager manager;
-
+        private CollisionControl collisionControl;
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -32,6 +34,7 @@ namespace RTS
         {
             // TODO: Add your initialization logic here
             manager = new GameManager();
+            collisionControl = new CollisionControl(manager);
             manager.Container.SelectedGameObject = manager.Container.GetGameObject("Worker1");
             base.Initialize();
         }
@@ -44,8 +47,8 @@ namespace RTS
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            
-            
+            spriteFont = Content.Load<SpriteFont>("debug");
+
 
             // TODO: use this.Content to load your game content here
         }
@@ -75,17 +78,9 @@ namespace RTS
                 manager.Container.SelectedGameObject.move(new Vector2(mouseState.X, mouseState.Y), 100);
             }
             manager.UpdateOrganisms();
-            if (manager.Container.CheckCollision("Worker1"))
-            {
-                var mine = manager.Container.GetGameObject("Mine1") as GoldMine;
-                var worker = manager.Container.GetGameObject("Worker1") as Worker;
-                if (worker?.CurrentWeight < worker?.MaxWeight)
-                {
-                    worker.CurrentWeight += mine.TakeGold();
-                }
-            }
-            // TODO: Add your update logic here
 
+            collisionControl.InvokeActions();
+            
             base.Update(gameTime);
         }
 
@@ -98,7 +93,8 @@ namespace RTS
             GraphicsDevice.Clear(Color.CornflowerBlue);
             spriteBatch.Begin();
             DrawRectangle(new Rectangle(Mouse.GetState().X,Mouse.GetState().Y,10,10), Color.Red);
-            manager.DrawOrganisms(spriteBatch,GraphicsDevice);
+            manager.DrawOrganisms(spriteBatch,GraphicsDevice, spriteFont);
+            
             spriteBatch.End();
             base.Draw(gameTime);
         }

@@ -42,10 +42,12 @@
     <Compile Include="Abstract\ObjectContainer.cs" />
     <Compile Include="Concrete\GameManager.cs" />
     <Compile Include="Concrete\GoldMine.cs" />
+    <Compile Include="Concrete\Headquarters.cs" />
     <Compile Include="Concrete\Player.cs" />
     <Compile Include="Concrete\PlayerManager.cs" />
     <Compile Include="Concrete\Worker.cs" />
     <Compile Include="Game1.cs" />
+    <Compile Include="Mechanics\CollisionControl.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

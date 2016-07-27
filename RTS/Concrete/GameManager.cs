@@ -32,8 +32,8 @@ namespace RTS.Concrete
             };
             worker.move(new Vector2(120, 50), 50);
             
-            Container.AddObject("Worker1",worker,Players.GetCurrentPlayer().PlayerID);
-            Players.GetCurrentPlayer().properties["Objects"]++;
+            Container.AddObject("Worker1",worker,Players.GetCurrentPlayer());
+            
 
             var mine = new GoldMine(1000)
             {
@@ -41,8 +41,15 @@ namespace RTS.Concrete
                 Coords = new Vector2(440, 100)
             };
 
-            Container.AddObject("Mine1", mine, Players.GetCurrentPlayer().PlayerID);
-            Players.GetCurrentPlayer().properties["Objects"]++;
+            Container.AddObject("Mine1", mine, Players.GetCurrentPlayer());
+            
+
+            var HQ = new Headquarters()
+            {
+                texture = Color.Black,
+                Coords = new Vector2(20, 400)
+            };
+            Container.AddObject("HQ", HQ, Players.GetCurrentPlayer());
 
         }
 
@@ -58,15 +65,15 @@ namespace RTS.Concrete
             }
         }
 
-        public void DrawOrganisms(SpriteBatch spriteBatch,GraphicsDevice graphicsDevice, GameObject obj = null)
+        public void DrawOrganisms(SpriteBatch spriteBatch,GraphicsDevice graphicsDevice, SpriteFont spriteFont, GameObject obj = null)
         {
             if (obj == null)
             {
-                Container.DrawAll(spriteBatch, graphicsDevice);
+                Container.DrawAll(spriteBatch, graphicsDevice, spriteFont);
             }
             else
             {
-                obj.Draw(spriteBatch,graphicsDevice);
+                obj.Draw(spriteBatch,graphicsDevice, spriteFont);
             }
         }
     }

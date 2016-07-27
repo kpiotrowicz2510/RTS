@@ -41,10 +41,17 @@ namespace RTS.Abstract
             }
         }
 
-        public virtual void Draw(SpriteBatch spriteBatch, GraphicsDevice graphicsDevice)
+        public virtual void Draw(SpriteBatch spriteBatch, GraphicsDevice graphicsDevice, SpriteFont font)
         {
             var rect = new Texture2D(graphicsDevice, 1, 1);
             rect.SetData(new[] { texture });
+            int i = 0;
+            foreach (var prop in properties)
+            {
+                spriteBatch.DrawString(font, prop.Key+":"+prop.Value, new Vector2((int)Coords.X, (int)Coords.Y - 100+i), Color.Black);
+                i += 10;
+            }
+           
             spriteBatch.Draw(rect, new Rectangle(new Point((int) Coords.X,(int) Coords.Y),new Point(10,10)), texture);
         }
     }

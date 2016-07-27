@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using RTS.Concrete;
 
 namespace RTS.Abstract
 {
@@ -12,9 +13,10 @@ namespace RTS.Abstract
     {
         private Dictionary<string,GameObject> Objects = new Dictionary<string, GameObject>();
         public GameObject SelectedGameObject { get; set; }
-        public void AddObject(string name, GameObject obj, int OwnerID)
+        public void AddObject(string name, GameObject obj, Player Owner)
         {
-            obj.OwnerID = OwnerID;
+            obj.OwnerID = Owner.PlayerID;
+            Owner.properties["Objects"]++;
             Objects[name] = obj;
         }
 
@@ -22,7 +24,7 @@ namespace RTS.Abstract
         {
             return Objects[name];
         }
-        public bool CheckCollision(string objName)
+        public GameObject CheckCollision(string objName)
         {
             foreach (var obj in Objects)
             {
@@ -31,14 +33,14 @@ namespace RTS.Abstract
                 {
                     if (objName == obj.Key || Objects[objName].PlatformCollision != false) continue;
                     Objects[objName].PlatformCollision = true;
-                    return true;
+                    return obj.Value;
                 }
                 else
                 {
                     Objects[objName].PlatformCollision = false;
                 }
             }
-            return false;
+            return null;
         }
 
         public void UpdateAll()
@@ -49,11 +51,11 @@ namespace RTS.Abstract
             }
         }
 
-        public void DrawAll(SpriteBatch spriteBatch, GraphicsDevice graphicsDevice)
+        public void DrawAll(SpriteBatch spriteBatch, GraphicsDevice graphicsDevice, SpriteFont spriteFont)
         {
             foreach (var obj in Objects)
             {
-                obj.Value.Draw(spriteBatch,graphicsDevice);
+                obj.Value.Draw(spriteBatch,graphicsDevice,spriteFont);
             }
         }
     }

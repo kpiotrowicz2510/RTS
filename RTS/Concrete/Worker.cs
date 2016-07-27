@@ -12,5 +12,11 @@ namespace RTS.Concrete
     {
         public int MaxWeight = 10;
         public int CurrentWeight = 0;
+
+        public Worker()
+        {
+            properties["CurrentWeight"] = 0;
+            properties["MaxWeight"] = 10;
+        }
     }
 }
