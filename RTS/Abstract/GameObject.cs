@@ -26,6 +26,7 @@ namespace RTS.Abstract
         public Job CurrentJob { get; set; }
         public Vector2 Coords { get; set; }
         public Vector2 targetCoords { get; set; }
+        public Point size;
         public ActionControl actionControl = new ActionControl();
         public bool isSelected { get; set; }
         public GameObject()
@@ -34,6 +35,7 @@ namespace RTS.Abstract
             properties["Damage"] = 0;
             properties["Armor"] = 10;
             properties["SightLine"] = 20;
+            size = new Point(10,10);
             isSelected = false;
         }
         public virtual void move(Vector2 coords, int speed)
@@ -65,7 +67,7 @@ namespace RTS.Abstract
             }
         }
 
-        public virtual void Draw(SpriteBatch spriteBatch, GraphicsDevice graphicsDevice, SpriteFont font)
+        public virtual void Draw(SpriteBatch spriteBatch, GraphicsDevice graphicsDevice, SpriteFont font, Player currentPlayer)
         {
             var rect = new Texture2D(graphicsDevice, 1, 1);
             rect.SetData(new[] { texture });
@@ -77,9 +79,14 @@ namespace RTS.Abstract
             }
             if (isSelected)
             {
-                spriteBatch.Draw(rect, new Rectangle(new Point((int)(Coords.X-5), (int)(Coords.Y-5)), new Point(20, 20)), Color.DarkRed);
+                spriteBatch.Draw(rect, new Rectangle(new Point((int)(Coords.X-5), (int)(Coords.Y-5)), new Point(size.X+20, size.Y+20)), Color.DarkRed);
             }
-            spriteBatch.Draw(rect, new Rectangle(new Point((int) Coords.X,(int) Coords.Y),new Point(10,10)), texture);
+            if (Owner!=currentPlayer)
+            {
+                spriteBatch.Draw(rect, new Rectangle(new Point((int)Coords.X, (int)Coords.Y), size), Color.Red);
+                return;
+            }
+            spriteBatch.Draw(rect, new Rectangle(new Point((int) Coords.X,(int) Coords.Y),size), texture);
         }
     }
 }

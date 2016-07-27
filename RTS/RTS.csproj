@@ -52,6 +52,7 @@
     <Compile Include="Concrete\Worker.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="Mechanics\ActionWalkControl.cs" />
+    <Compile Include="Mechanics\Camera2D.cs" />
     <Compile Include="Mechanics\CollisionControl.cs" />
     <Compile Include="Mechanics\HUDControl.cs" />
     <Compile Include="Program.cs" />

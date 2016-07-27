@@ -62,15 +62,15 @@ namespace RTS.Concrete
             }
         }
 
-        public void DrawOrganisms(SpriteBatch spriteBatch,GraphicsDevice graphicsDevice, SpriteFont spriteFont, GameObject obj = null)
+        public void DrawOrganisms(SpriteBatch spriteBatch,GraphicsDevice graphicsDevice, SpriteFont spriteFont, Player currentPlayer,GameObject obj = null )
         {
             if (obj == null)
             {
-                Container.DrawAll(spriteBatch, graphicsDevice, spriteFont);
+                Container.DrawAll(spriteBatch, graphicsDevice, spriteFont,currentPlayer);
             }
             else
             {
-                obj.Draw(spriteBatch,graphicsDevice, spriteFont);
+                obj.Draw(spriteBatch,graphicsDevice, spriteFont,currentPlayer);
             }
         }
     }

@@ -112,11 +112,11 @@ namespace RTS.Abstract
             }
         }
 
-        public void DrawAll(SpriteBatch spriteBatch, GraphicsDevice graphicsDevice, SpriteFont spriteFont)
+        public void DrawAll(SpriteBatch spriteBatch, GraphicsDevice graphicsDevice, SpriteFont spriteFont, Player currentPlayer)
         {
             foreach (var obj in Objects)
             {
-                obj.Value.Draw(spriteBatch,graphicsDevice,spriteFont);
+                obj.Value.Draw(spriteBatch,graphicsDevice,spriteFont,currentPlayer);
             }
         }
     }

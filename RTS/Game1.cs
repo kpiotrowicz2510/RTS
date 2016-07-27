@@ -19,6 +19,8 @@ namespace RTS
         private HUDControl hud;
         private GameManager manager;
         private CollisionControl collisionControl;
+        private Camera2D _camera;
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -29,6 +31,7 @@ namespace RTS
         {
             // TODO: Add your initialization logic here
             manager = new GameManager();
+            _camera = new Camera2D(GraphicsDevice.Viewport);
             collisionControl = new CollisionControl(manager);
             base.Initialize();
         }
@@ -54,6 +57,32 @@ namespace RTS
 
         protected override void Update(GameTime gameTime)
         {
+
+            var deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            var keyboardState = Keyboard.GetState();
+
+            // rotation
+            if (keyboardState.IsKeyDown(Keys.Q))
+                _camera.Rotation -= deltaTime;
+
+            if (keyboardState.IsKeyDown(Keys.W))
+                _camera.Rotation += deltaTime;
+
+            // movement
+            if (keyboardState.IsKeyDown(Keys.Up))
+                _camera.Position -= new Vector2(0, 250) * deltaTime;
+
+            if (keyboardState.IsKeyDown(Keys.Down))
+                _camera.Position += new Vector2(0, 250) * deltaTime;
+
+            if (keyboardState.IsKeyDown(Keys.Left))
+                _camera.Position -= new Vector2(250, 0) * deltaTime;
+
+            if (keyboardState.IsKeyDown(Keys.Right))
+                _camera.Position += new Vector2(250, 0) * deltaTime;
+
+
+
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
             var mouseState = Mouse.GetState();
@@ -79,9 +108,10 @@ namespace RTS
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-            spriteBatch.Begin();
+            var viewMatrix = _camera.GetViewMatrix();
+            spriteBatch.Begin(transformMatrix: viewMatrix);
             DrawRectangle(new Rectangle(Mouse.GetState().X,Mouse.GetState().Y,10,10), Color.Red);
-            manager.DrawOrganisms(spriteBatch,GraphicsDevice, spriteFont);
+            manager.DrawOrganisms(spriteBatch,GraphicsDevice, spriteFont, manager.Players.GetCurrentPlayer());
             hud.DrawHUD();
             spriteBatch.End();
             base.Draw(gameTime);

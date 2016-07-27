@@ -16,11 +16,11 @@ namespace RTS.Concrete
         {
             speed = 1000;
             properties["Damage"] = 20;
-            properties["SightLine"] = 10;
+            properties["SightLine"] = 20;
             texture = Color.Yellow;
         }
 
-        public override void Draw(SpriteBatch spriteBatch, GraphicsDevice graphicsDevice, SpriteFont font)
+        public override void Draw(SpriteBatch spriteBatch, GraphicsDevice graphicsDevice, SpriteFont font, Player currentPlayer)
         {
             var rect = new Texture2D(graphicsDevice, 1, 1);
             rect.SetData(new[] {texture});

@@ -15,7 +15,9 @@ namespace RTS.Concrete
         public Headquarters()
         {
             properties["MaxLoad"] = 1000;
+            properties["SightLine"] = 50;
             properties["CurrentLoad"] = 0;
+            size = new Point(50,30);
         }
 
         public void AddLoad(GameObject obj)

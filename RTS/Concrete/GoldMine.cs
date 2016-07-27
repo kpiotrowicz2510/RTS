@@ -13,6 +13,7 @@ namespace RTS.Concrete
         {
             this.properties["CurrentGoldResource"] = goldResource;
             this.properties["GoldMineSpeed"] = 10;
+
         }
 
         public int TakeGold()
