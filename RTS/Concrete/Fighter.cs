@@ -10,14 +10,15 @@ namespace RTS.Concrete
 {
     public class Fighter: GameObject
     {
-        private int shootFrequency = 50;
+        private int shootFrequency = 100;
         private int counterShoot = 0;
         private bool canShoot = true;
         public Fighter()
         {
             properties["Damage"] = 10;
             properties["Armor"] = 20;
-            properties["SightLine"] = 40;
+            properties["SightLine"] = 60;
+            properties["BuildCost"] = 150;
             texture = Color.Blue;
             speed = 300;
         }
@@ -37,7 +38,7 @@ namespace RTS.Concrete
                 else
                 {
                     counterShoot++;
-                    if (counterShoot == shootFrequency)
+                    if (counterShoot >= shootFrequency)
                     {
                         counterShoot = 0;
                         canShoot = true;

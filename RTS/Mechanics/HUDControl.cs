@@ -76,12 +76,11 @@ namespace RTS.Mechanics
 
         public void NewWorker()
         {
-            
-            manager.Headquarters.AddBuild(new Worker());
+            if(manager.Container.SelectedGameObject.GetType()==typeof(Headquarters)) manager.Headquarters.AddBuild(new Worker());
         }
         public void NewFighter()
         {
-            manager.Headquarters.AddBuild(new Fighter());
+            if (manager.Container.SelectedGameObject.GetType() == typeof(Headquarters)) manager.Headquarters.AddBuild(new Fighter());
         }
     }
 }

@@ -14,8 +14,9 @@ namespace RTS.Concrete
         private string ownerString;
         public Bullet()
         {
-            speed = 1000;
+            speed = 80;
             properties["Damage"] = 20;
+            size = new Point(3,3);
             properties["SightLine"] = 2;
             texture = Color.Yellow;
         }
@@ -24,7 +25,7 @@ namespace RTS.Concrete
         {
             var rect = new Texture2D(graphicsDevice, 1, 1);
             rect.SetData(new[] {texture});
-            spriteBatch.Draw(rect, new Rectangle(new Point((int) Coords.X, (int) Coords.Y), new Point(2, 3)), texture);
+            spriteBatch.Draw(rect, new Rectangle(new Point((int) Coords.X, (int) Coords.Y), new Point(3, 3)), texture);
         }
     }
 }

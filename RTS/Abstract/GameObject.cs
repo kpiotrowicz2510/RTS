@@ -35,6 +35,7 @@ namespace RTS.Abstract
             properties["Damage"] = 0;
             properties["Armor"] = 10;
             properties["SightLine"] = 20;
+            properties["BuildCost"] = 100;
             size = new Point(10,10);
             isSelected = false;
         }

@@ -33,7 +33,15 @@ namespace RTS.Concrete
             {
                 gameObject=obj
             };
-            HQBuildList.Add(build);
+            if (Owner.properties["Gold"] >= obj.properties["BuildCost"])
+            {
+                Owner.properties["Gold"] -= obj.properties["BuildCost"];
+                HQBuildList.Add(build);
+            }
+            else
+            {
+                //Error
+            }
         }
 
         public override void Update()

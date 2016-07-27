@@ -32,7 +32,10 @@ namespace RTS.Concrete
             Container.CreateNewObject(typeof(Worker), new Vector2(120, 50), Players.GetCurrentPlayer());
             Container.CreateNewObject(typeof(Worker), new Vector2(200, 0), Players.GetCurrentPlayer());
 
-            Container.CreateNewObject(typeof(Worker), new Vector2(600, 350), Players.GetCurrentPlayer("michu"));
+            Container.CreateNewObject(typeof(Fighter), new Vector2(600, 350), Players.GetCurrentPlayer("michu"));
+            Container.CreateNewObject(typeof(Fighter), new Vector2(650, 350), Players.GetCurrentPlayer("michu"));
+            Container.CreateNewObject(typeof(Fighter), new Vector2(550, 350), Players.GetCurrentPlayer("michu"));
+
             Container.CreateNewObject(typeof(Fighter), new Vector2(200,200), Players.GetCurrentPlayer());
 
             var mine = new GoldMine(1000)
