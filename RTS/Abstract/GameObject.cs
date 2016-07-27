@@ -72,12 +72,12 @@ namespace RTS.Abstract
         {
             var rect = new Texture2D(graphicsDevice, 1, 1);
             rect.SetData(new[] { texture });
-            int i = 0;
-            foreach (var prop in properties)
-            {
-                spriteBatch.DrawString(font, prop.Key+":"+prop.Value, new Vector2((int)Coords.X, (int)Coords.Y - 100+i), Color.Black);
-                i += 10;
-            }
+            //int i = 0;
+            //foreach (var prop in properties)
+            //{
+            //    spriteBatch.DrawString(font, prop.Key+":"+prop.Value, new Vector2((int)Coords.X, (int)Coords.Y - 100+i), Color.Black);
+            //    i += 10;
+            //}
             if (isSelected)
             {
                 spriteBatch.Draw(rect, new Rectangle(new Point((int)(Coords.X-2), (int)(Coords.Y-2)), new Point(size.X+4, size.Y+4)), Color.Green);

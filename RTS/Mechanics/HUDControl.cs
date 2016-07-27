@@ -72,6 +72,19 @@ namespace RTS.Mechanics
             manager.ClickableAreas.AddArea(area2);
 
             //draw objectinfo
+            int i = 0;
+            if (manager.Container.SelectedGameObject == null) return;
+            spriteBatch.DrawString(spriteFont,   "Type:" + manager.Container.SelectedGameObject.GetType().Name,
+                       hudPosition + new Vector2(graphics.PreferredBackBufferWidth / 2 - 170, 5) + new Vector2(0, i),
+                       Color.White);
+            foreach (var prop in manager.Container.SelectedGameObject.properties)
+                {
+                    spriteBatch.DrawString(spriteFont, prop.Key + ":" + prop.Value,
+                        hudPosition + new Vector2(graphics.PreferredBackBufferWidth/2, 5) + new Vector2(0, i),
+                        Color.White);
+                    i += 15;
+                }
+            
         }
 
         public void NewWorker()

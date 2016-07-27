@@ -14,6 +14,7 @@ namespace RTS.Concrete
         {
             this.properties["CurrentGoldResource"] = goldResource;
             this.properties["GoldMineSpeed"] = 10;
+            properties["Destroyable"] = 0;
             size = new Point(50,50);
             texture = Color.Gold;
         }
