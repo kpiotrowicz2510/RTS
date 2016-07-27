@@ -78,12 +78,15 @@ namespace RTS.Abstract
         {
             var rect = new Texture2D(graphicsDevice, 1, 1);
             rect.SetData(new[] { texture });
+            var rect2 = new Texture2D(graphicsDevice, 1, 1);
+            rect2.SetData(new[] { Color.Green });
             //int i = 0;
             //foreach (var prop in properties)
             //{
             //    spriteBatch.DrawString(font, prop.Key+":"+prop.Value, new Vector2((int)Coords.X, (int)Coords.Y - 100+i), Color.Black);
             //    i += 10;
             //}
+            spriteBatch.Draw(rect2, new Rectangle(new Point((int)(Coords.X - 5), (int)(Coords.Y - 10)), new Point(properties["Health"]/5, 5)), Color.Green);
             if (0 == 1)
             {
                 rect.SetData(new[] { new Color(Color.Yellow, 10) });
