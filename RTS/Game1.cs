@@ -16,6 +16,7 @@ namespace RTS
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         SpriteFont spriteFont;
+        private HUDControl hud;
         private GameManager manager;
         private CollisionControl collisionControl;
         public Game1()
@@ -23,13 +24,7 @@ namespace RTS
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
         }
-
-        /// <summary>
-        /// Allows the game to perform any initialization it needs to before starting to run.
-        /// This is where it can query for any required services and load any non-graphic
-        /// related content.  Calling base.Initialize will enumerate through any components
-        /// and initialize them as well.
-        /// </summary>
+        
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
@@ -39,44 +34,39 @@ namespace RTS
             base.Initialize();
         }
 
-        /// <summary>
-        /// LoadContent will be called once per game and is the place to load
-        /// all of your content.
-        /// </summary>
         protected override void LoadContent()
         {
-            // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
             spriteFont = Content.Load<SpriteFont>("debug");
-
-
-            // TODO: use this.Content to load your game content here
+            hud = new HUDControl()
+            {
+                posPoint = new Vector2(0, 0),
+                size = new Point(300, 100),
+                spriteBatch = spriteBatch,
+                spriteFont = spriteFont,
+                currentPlayer = manager.Players.GetCurrentPlayer()
+            };
         }
 
-        /// <summary>
-        /// UnloadContent will be called once per game and is the place to unload
-        /// game-specific content.
-        /// </summary>
         protected override void UnloadContent()
         {
-            // TODO: Unload any non ContentManager content here
+            Content.Unload();
         }
 
-        /// <summary>
-        /// Allows the game to run logic such as updating the world,
-        /// checking for collisions, gathering input, and playing audio.
-        /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
             var mouseState = Mouse.GetState();
-
             if (mouseState.LeftButton == ButtonState.Pressed)
             {
-                manager.Container.SelectedGameObject.move(new Vector2(mouseState.X, mouseState.Y), 100);
+                manager.Container.SelectGameObjectAtPoint(mouseState.X, mouseState.Y);
             }
+            if (mouseState.RightButton == ButtonState.Pressed)
+            {
+                manager.Container.SelectedGameObject.actionControl.AddGoPoint(new Point(mouseState.X, mouseState.Y));
+            }
+
             manager.UpdateOrganisms();
 
             collisionControl.InvokeActions();
@@ -84,17 +74,13 @@ namespace RTS
             base.Update(gameTime);
         }
 
-        /// <summary>
-        /// This is called when the game should draw itself.
-        /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
             spriteBatch.Begin();
             DrawRectangle(new Rectangle(Mouse.GetState().X,Mouse.GetState().Y,10,10), Color.Red);
             manager.DrawOrganisms(spriteBatch,GraphicsDevice, spriteFont);
-            
+            hud.DrawHUD();
             spriteBatch.End();
             base.Draw(gameTime);
         }

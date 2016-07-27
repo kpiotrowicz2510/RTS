@@ -30,10 +30,20 @@ namespace RTS.Concrete
                 Coords = new Vector2(0, 10),
                 CurrentJob = Job.DONE
             };
-            worker.move(new Vector2(120, 50), 50);
+            worker.move(new Vector2(120, 50), 500);
             
             Container.AddObject("Worker1",worker,Players.GetCurrentPlayer());
+
+            var worker2 = new Worker
+            {
+                texture = Color.AliceBlue,
+                Coords = new Vector2(0, 10),
+                CurrentJob = Job.DONE
+            };
+            worker2.move(new Vector2(120, 150), 500);
             
+            Container.AddObject("Worker2", worker2, Players.GetCurrentPlayer());
+
 
             var mine = new GoldMine(1000)
             {

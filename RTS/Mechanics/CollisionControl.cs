@@ -29,29 +29,41 @@ namespace RTS.Mechanics
         }
         private void MiningWorker()
         {
-            if (manager.Container.CheckCollision("Worker1") is GoldMine)
+            foreach (var obj in manager.Container.ReturnGameObjectsOfType(typeof(Worker)))
             {
-                var mine = manager.Container.GetGameObject("Mine1") as GoldMine;
-                var worker = manager.Container.GetGameObject("Worker1") as Worker;
-                if (worker?.properties["CurrentWeight"] < worker?.MaxWeight)
+                var obj2 = manager.Container.CheckCollision(obj, typeof(GoldMine));
+                if (obj2!=null)
                 {
-                    worker.properties["CurrentWeight"] += mine.TakeGold();
-                    worker.properties["MaxWeight"] = worker.MaxWeight;
+                    var mine = obj2 as GoldMine;
+                    var worker = obj as Worker;
+                    if (worker?.properties["CurrentWeight"] < worker?.MaxWeight)
+                    {
+                        worker.properties["CurrentWeight"] += mine.TakeGold();
+                        worker.properties["MaxWeight"] = worker.MaxWeight;
+                    }
                 }
             }
         }
 
         private void HQWorker()
         {
-            if (manager.Container.CheckCollision("Worker1") is Headquarters)
+            foreach (var obj in manager.Container.ReturnGameObjectsOfType(typeof(Worker)))
             {
-                var hq = manager.Container.GetGameObject("HQ") as Headquarters;
-                var worker = manager.Container.GetGameObject("Worker1") as Worker;
-                if (worker?.properties["CurrentWeight"] > 0&&hq?.properties["CurrentLoad"] + worker.properties["CurrentWeight"] < hq.properties["MaxLoad"])
+                var obj2 = manager.Container.CheckCollision(obj, typeof(Headquarters));
+                if (obj2 != null)
                 {
-                    hq.properties["CurrentLoad"] += worker.properties["CurrentWeight"];
-                    worker.properties["CurrentWeight"] = 0;
-                    
+                    var hq = obj2 as Headquarters;
+                    var worker = obj as Worker;
+                    if (worker?.properties["CurrentWeight"] > 0 && hq?.properties["CurrentLoad"] + worker.properties["CurrentWeight"] <= hq.properties["MaxLoad"])
+                    {
+                        hq.properties["CurrentLoad"] += worker.properties["CurrentWeight"];
+                        hq.Owner.properties["Gold"] += worker.properties["CurrentWeight"];
+                        worker.properties["CurrentWeight"] = 0;
+                    }
+                    if (hq?.properties["CurrentLoad"] == hq?.properties["MaxLoad"])
+                    {
+                        worker.actionControl.CancelActions();
+                    }
                 }
             }
         }

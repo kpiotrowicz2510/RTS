@@ -16,6 +16,7 @@ namespace RTS.Abstract
         public void AddObject(string name, GameObject obj, Player Owner)
         {
             obj.OwnerID = Owner.PlayerID;
+            obj.Owner = Owner;
             Owner.properties["Objects"]++;
             Objects[name] = obj;
         }
@@ -24,23 +25,55 @@ namespace RTS.Abstract
         {
             return Objects[name];
         }
-        public GameObject CheckCollision(string objName)
+        public GameObject CheckCollision(GameObject obj1, Type obj2)
         {
             foreach (var obj in Objects)
             {
-
-                if (Vector2.Distance(obj.Value.Coords, Objects[objName].Coords) < 10)
+                if (obj.Value.GetType() == obj2)
                 {
-                    if (objName == obj.Key || Objects[objName].PlatformCollision != false) continue;
-                    Objects[objName].PlatformCollision = true;
-                    return obj.Value;
-                }
-                else
-                {
-                    Objects[objName].PlatformCollision = false;
+                    if (Vector2.Distance(obj.Value.Coords, obj1.Coords) < obj1.properties["SightLine"])
+                    {
+                        if (obj1.PlatformCollision != false) continue;
+                        obj1.PlatformCollision = true;
+                        return obj.Value;
+                    }
+                    else
+                    {
+                        obj1.PlatformCollision = false;
+                    }
                 }
             }
             return null;
+        }
+
+        public void SelectGameObjectAtPoint(int x, int y)
+        {
+            foreach (var obj in Objects)
+            {
+                Rectangle area = new Rectangle((int) obj.Value.Coords.X, (int) obj.Value.Coords.Y, 20,20);
+                if (area.Contains(x, y))
+                {
+                    SelectedGameObject = obj.Value;
+                    obj.Value.isSelected = true;
+                }
+                else
+                {
+                    obj.Value.isSelected = false;
+                }
+            }
+        }
+
+        public IEnumerable<GameObject> ReturnGameObjectsOfType(Type type)
+        {
+            List<GameObject> list = new List<GameObject>();
+            foreach (var obj in Objects)
+            {
+                if (obj.Value.GetType() == type)
+                {
+                    list.Add(obj.Value);
+                }
+            }
+            return list;
         }
 
         public void UpdateAll()
