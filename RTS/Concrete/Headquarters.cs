@@ -59,7 +59,7 @@ namespace RTS.Concrete
             {
                 spriteBatch.Draw(rect2,
                     new Rectangle(new Point((int) (Coords.X - 5), (int) (Coords.Y - 20)),
-                        new Point(currentBuild.buildState/2, 5)), Color.Green);
+                        new Point(currentBuild.buildState/2, 5)), Color.Blue);
             }
             base.Draw(spriteBatch, graphicsDevice, font, currentPlayer);
         }
