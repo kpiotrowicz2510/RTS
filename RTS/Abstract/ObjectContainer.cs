@@ -35,8 +35,11 @@ namespace RTS.Abstract
                 if(obj.Value==obj1) continue;
                 if (obj.Value.GetType() == obj2||obj2==null)
                 {
-                    if (Vector2.Distance(obj.Value.Coords, obj1.Coords) < obj1.properties["SightLine"])
+                    Rectangle area = new Rectangle((int)obj.Value.Coords.X - obj.Value.properties["SightLine"], (int)obj.Value.Coords.Y - obj.Value.properties["SightLine"], obj.Value.size.X + obj.Value.properties["SightLine"], obj.Value.size.Y + obj.Value.properties["SightLine"]);
+                    if (area.Contains(obj1.Coords.X, obj1.Coords.Y))
                     {
+                    //    if (Vector2.Distance(obj.Value.Coords, obj1.Coords) < obj1.properties["SightLine"])
+                    //{
                         if (obj1.PlatformCollision != false) continue;
                         obj1.PlatformCollision = true;
                         return obj.Value;
@@ -50,11 +53,24 @@ namespace RTS.Abstract
             return null;
         }
 
+        public GameObject SelectGameObjectAtArea(Rectangle area)
+        {
+            foreach (var obj in Objects)
+            {
+                if (area.Contains(new Rectangle((int) obj.Value.Coords.X, (int)obj.Value.Coords.Y, obj.Value.size.X,
+                        obj.Value.size.Y)))
+                {
+                    return obj.Value;
+                }
+            }
+            return null;
+        }
+
         public GameObject SelectGameObjectAtPoint(int x, int y, Player owner, bool ret=false, int sightLine=40)
         {
             foreach (var obj in Objects)
             {
-                Rectangle area = new Rectangle((int) obj.Value.Coords.X-sightLine/2, (int) obj.Value.Coords.Y-sightLine/2, sightLine,sightLine);
+                Rectangle area = new Rectangle((int) obj.Value.Coords.X-sightLine, (int) obj.Value.Coords.Y-sightLine, obj.Value.size.X+sightLine,obj.Value.size.Y+sightLine);
                 if (area.Contains(x, y))
                 {
                     if (obj.Value.Owner == owner)

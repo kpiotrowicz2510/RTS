@@ -10,21 +10,22 @@ namespace RTS.Concrete
 {
     public class Fighter: GameObject
     {
-        private int shootFrequency = 70;
+        private int shootFrequency = 50;
         private int counterShoot = 0;
         private bool canShoot = true;
         public Fighter()
         {
-            properties["Damage"] = 20;
+            properties["Damage"] = 10;
             properties["Armor"] = 20;
-            properties["SightLine"] = 160;
+            properties["SightLine"] = 40;
             texture = Color.Blue;
             speed = 300;
         }
 
         public override void Update()
         {
-            var obj = Container.SelectGameObjectAtPoint((int) Coords.X, (int) Coords.Y, null, true, properties["SightLine"]);
+            Rectangle area = new Rectangle((int)Coords.X - properties["SightLine"], (int)Coords.Y - properties["SightLine"], size.X + properties["SightLine"]*2, size.Y + properties["SightLine"]*2);
+            var obj = Container.SelectGameObjectAtArea(area);
             if (obj.Owner != Owner)
             {
                 if (canShoot)

@@ -79,7 +79,7 @@ namespace RTS.Abstract
             }
             if (isSelected)
             {
-                spriteBatch.Draw(rect, new Rectangle(new Point((int)(Coords.X-5), (int)(Coords.Y-5)), new Point(size.X+20, size.Y+20)), Color.DarkRed);
+                spriteBatch.Draw(rect, new Rectangle(new Point((int)(Coords.X-2), (int)(Coords.Y-2)), new Point(size.X+4, size.Y+4)), Color.Green);
             }
             if (Owner!=currentPlayer)
             {

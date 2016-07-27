@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using RTS.Abstract;
+using RTS.Mechanics;
 
 namespace RTS.Concrete
 {
@@ -13,11 +14,12 @@ namespace RTS.Concrete
     {
         public ObjectContainer Container;
         public PlayerManager Players;
-
+        public ClickableAreas ClickableAreas;
         public GameManager()
         {
             Container = new ObjectContainer();  
             Players = new PlayerManager();
+            ClickableAreas = new ClickableAreas();
             this.Initialize();
         }
 
@@ -34,7 +36,6 @@ namespace RTS.Concrete
 
             var mine = new GoldMine(1000)
             {
-                texture = Color.Beige,
                 Coords = new Vector2(440, 100)
             };
 

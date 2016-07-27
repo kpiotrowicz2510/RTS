@@ -24,6 +24,9 @@ namespace RTS
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
+           // graphics.IsFullScreen = true;
+            //graphics.PreferredBackBufferHeight = 768;
+           // graphics.PreferredBackBufferWidth = 1366;
             Content.RootDirectory = "Content";
         }
         
@@ -46,6 +49,10 @@ namespace RTS
                 size = new Point(300, 100),
                 spriteBatch = spriteBatch,
                 spriteFont = spriteFont,
+                graphicsDevice = GraphicsDevice,
+                graphics = graphics,
+                camera = _camera,
+                manager = manager,
                 currentPlayer = manager.Players.GetCurrentPlayer()
             };
         }
@@ -89,6 +96,7 @@ namespace RTS
             if (mouseState.LeftButton == ButtonState.Pressed)
             {
                 manager.Container.SelectGameObjectAtPoint(mouseState.X, mouseState.Y, manager.Players.GetCurrentPlayer());
+                if(manager.Container.SelectedGameObject!=null) manager.ClickableAreas.CheckAreas(mouseState.Position);
             }
             if (mouseState.RightButton == ButtonState.Pressed&&Keyboard.GetState().IsKeyDown(Keys.LeftControl))
             {
@@ -99,7 +107,7 @@ namespace RTS
             }
 
             manager.UpdateOrganisms();
-
+            
             collisionControl.InvokeActions();
             
             base.Update(gameTime);
@@ -110,9 +118,9 @@ namespace RTS
             GraphicsDevice.Clear(Color.CornflowerBlue);
             var viewMatrix = _camera.GetViewMatrix();
             spriteBatch.Begin(transformMatrix: viewMatrix);
-            DrawRectangle(new Rectangle(Mouse.GetState().X,Mouse.GetState().Y,10,10), Color.Red);
             manager.DrawOrganisms(spriteBatch,GraphicsDevice, spriteFont, manager.Players.GetCurrentPlayer());
             hud.DrawHUD();
+            DrawRectangle(new Rectangle(Mouse.GetState().X, Mouse.GetState().Y, 10, 10), Color.Red);
             spriteBatch.End();
             base.Draw(gameTime);
         }
