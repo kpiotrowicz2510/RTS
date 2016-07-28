@@ -11,20 +11,17 @@ namespace RTS.Abstract
 {
     public class ObjectContainer
     {
-        private Dictionary<string,GameObject> Objects = new Dictionary<string, GameObject>();
+        public Dictionary<string,GameObject> Objects = new Dictionary<string, GameObject>();
         public GameObject SelectedGameObject { get; set; }
-        public GameManager manager;
-        public SpriteFont SpriteFont;
-        public SpriteBatch SpriteBatch;
-        public GraphicsDevice GraphicsDevice;
+        
         private int objectCount=0;
+
+        
         public void AddObject(string name, GameObject obj, Player Owner)
         {
             obj.OwnerID = Owner.PlayerID;
             obj.Owner = Owner;
-            obj.Container = this;
             obj.name = name;
-            obj.manager = manager;
             Owner.properties["Objects"]++;
             Objects[name] = obj;
         }
@@ -57,21 +54,32 @@ namespace RTS.Abstract
             foreach (var obj in Objects)
             {
                 if(obj.Value==obj1) continue;
-                if (obj.Value.GetType() == obj2||obj2==null)
+                if (obj.Value.GetType() != obj2 && obj2 != null) continue;
+                Rectangle area = new Rectangle((int)obj.Value.Coords.X - obj.Value.properties["SightLine"], (int)obj.Value.Coords.Y - obj.Value.properties["SightLine"], obj.Value.size.X + obj.Value.properties["SightLine"], obj.Value.size.Y + obj.Value.properties["SightLine"]);
+                if (area.Contains(obj1.Coords.X, obj1.Coords.Y))
                 {
-                    Rectangle area = new Rectangle((int)obj.Value.Coords.X - obj.Value.properties["SightLine"], (int)obj.Value.Coords.Y - obj.Value.properties["SightLine"], obj.Value.size.X + obj.Value.properties["SightLine"], obj.Value.size.Y + obj.Value.properties["SightLine"]);
-                    if (area.Contains(obj1.Coords.X, obj1.Coords.Y))
-                    {
                     //    if (Vector2.Distance(obj.Value.Coords, obj1.Coords) < obj1.properties["SightLine"])
                     //{
-                        if (obj1.PlatformCollision != false) continue;
-                        obj1.PlatformCollision = true;
-                        return obj.Value;
-                    }
-                    else
-                    {
-                        obj1.PlatformCollision = false;
-                    }
+                    if (obj1.PlatformCollision != false) continue;
+                    obj1.PlatformCollision = true;
+                    return obj.Value;
+                }
+                else
+                {
+                    obj1.PlatformCollision = false;
+                }
+            }
+            return null;
+        }
+
+        public GameObject SelectGameObjectAtAreaToAttack(Rectangle area, Player player)
+        {
+            foreach (var obj in Objects.Where(o=>o.Value.Owner!=player))
+            {
+                if (area.Contains(new Rectangle((int) obj.Value.Coords.X, (int)obj.Value.Coords.Y, obj.Value.size.X,
+                        obj.Value.size.Y)))
+                {
+                    return obj.Value;
                 }
             }
             return null;
@@ -79,9 +87,9 @@ namespace RTS.Abstract
 
         public GameObject SelectGameObjectAtArea(Rectangle area, Player player)
         {
-            foreach (var obj in Objects.Where(o=>o.Value.Owner!=player))
+            foreach (var obj in Objects.Where(o => o.Value.Owner == player))
             {
-                if (area.Contains(new Rectangle((int) obj.Value.Coords.X, (int)obj.Value.Coords.Y, obj.Value.size.X,
+                if (area.Contains(new Rectangle((int)obj.Value.Coords.X, (int)obj.Value.Coords.Y, obj.Value.size.X,
                         obj.Value.size.Y)))
                 {
                     return obj.Value;
@@ -120,8 +128,6 @@ namespace RTS.Abstract
             GameObject obj = Activator.CreateInstance(type) as GameObject;
             obj.Coords = pos;
             obj.Owner = owner;
-            obj.Container = this;
-            obj.manager = manager;
             obj.targetCoords = pos;
             obj.name = type.BaseType + "" + objectCount++;
             Objects.Add(obj.name,obj);

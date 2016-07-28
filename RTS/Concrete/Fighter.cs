@@ -26,7 +26,7 @@ namespace RTS.Concrete
         public override void Update()
         {
             Rectangle area = new Rectangle((int)Coords.X - properties["SightLine"], (int)Coords.Y - properties["SightLine"], size.X + properties["SightLine"]*2, size.Y + properties["SightLine"]*2);
-            var obj = Container.SelectGameObjectAtArea(area, Owner);
+            var obj = IManager.Instance.Container.SelectGameObjectAtAreaToAttack(area, Owner);
             if (obj!=null&&obj.Owner != Owner&&obj.properties["Destroyable"]==1)
             {
                 if (canShoot)
@@ -52,7 +52,7 @@ namespace RTS.Concrete
 
         public void Attack(GameObject obj)
         {
-            var bullet = Container.CreateNewObject(typeof(Bullet), Coords, Owner);
+            var bullet = IManager.Instance.Container.CreateNewObject(typeof(Bullet), Coords, Owner);
             bullet.target = this;
             bullet.targetCoords = obj.Coords+new Vector2(2,2);
         }

@@ -12,20 +12,17 @@ namespace RTS.Concrete
 {
     public class GameManager
     {
-        public ObjectContainer Container;
         public PlayerManager Players;
         public ClickableAreas ClickableAreas;
+
         public Headquarters Headquarters;
         public Dictionary<string, Texture2D> Textures;
-        public GameManager(SpriteBatch spriteBatch, GraphicsDevice graphicsDevice, SpriteFont spriteFont)
+        public GameManager()
         {
-            Container = new ObjectContainer()
-            {
-                manager = this,
-                SpriteFont = spriteFont,
-                GraphicsDevice = graphicsDevice,
-                SpriteBatch = spriteBatch
-            };
+            ObjectContainer Container = new ObjectContainer();
+
+            IManager.Instance.Container = Container;
+            
             Players = new PlayerManager();
             ClickableAreas = new ClickableAreas();
             this.Initialize();
@@ -36,23 +33,23 @@ namespace RTS.Concrete
             Players.AddNewPlayer("Computer");
             Players.AddNewPlayer("kris");
 
-            Container.CreateNewObject(typeof(Worker), new Vector2(120, 50), Players.GetCurrentPlayer());
-            Container.CreateNewObject(typeof(Worker), new Vector2(200, 0), Players.GetCurrentPlayer());
+            IManager.Instance.Container.CreateNewObject(typeof(Worker), new Vector2(120, 50), Players.GetCurrentPlayer());
+            IManager.Instance.Container.CreateNewObject(typeof(Worker), new Vector2(200, 0), Players.GetCurrentPlayer());
 
-            Container.CreateNewObject(typeof(Fighter), new Vector2(600, 350), Players.GetCurrentPlayer("Computer"));
-            Container.CreateNewObject(typeof(Fighter), new Vector2(650, 350), Players.GetCurrentPlayer("Computer"));
-            Container.CreateNewObject(typeof(Fighter), new Vector2(550, 350), Players.GetCurrentPlayer("Computer"));
-            Container.CreateNewObject(typeof(Headquarters), new Vector2(750, 350), Players.GetCurrentPlayer("Computer"));
-            Container.CreateNewObject(typeof(GoldMine), new Vector2(950, 250), Players.GetCurrentPlayer("Computer"));
+            IManager.Instance.Container.CreateNewObject(typeof(Fighter), new Vector2(600, 350), Players.GetCurrentPlayer("Computer"));
+            IManager.Instance.Container.CreateNewObject(typeof(Fighter), new Vector2(650, 350), Players.GetCurrentPlayer("Computer"));
+            IManager.Instance.Container.CreateNewObject(typeof(Fighter), new Vector2(550, 350), Players.GetCurrentPlayer("Computer"));
+            IManager.Instance.Container.CreateNewObject(typeof(Headquarters), new Vector2(750, 350), Players.GetCurrentPlayer("Computer"));
+            IManager.Instance.Container.CreateNewObject(typeof(GoldMine), new Vector2(950, 250), Players.GetCurrentPlayer("Computer"));
 
-            Container.CreateNewObject(typeof(Fighter), new Vector2(200,200), Players.GetCurrentPlayer());
+            IManager.Instance.Container.CreateNewObject(typeof(Fighter), new Vector2(200,200), Players.GetCurrentPlayer());
 
             var mine = new GoldMine()
             {
                 Coords = new Vector2(440, 100)
             };
 
-            Container.AddObject("Mine1", mine, Players.GetCurrentPlayer());
+            IManager.Instance.Container.AddObject("Mine1", mine, Players.GetCurrentPlayer());
             
 
             var HQ = new Headquarters()
@@ -60,7 +57,7 @@ namespace RTS.Concrete
                 texture = Color.Brown,
                 Coords = new Vector2(20, 400)
             };
-            Container.AddObject("HQ", HQ, Players.GetCurrentPlayer());
+            IManager.Instance.Container.AddObject("HQ", HQ, Players.GetCurrentPlayer());
             Headquarters = HQ;
         }
 
@@ -68,7 +65,7 @@ namespace RTS.Concrete
         {
             if (obj == null)
             {
-                Container.UpdateAll();
+                IManager.Instance.Container.UpdateAll();
             }
             else
             {
@@ -80,7 +77,7 @@ namespace RTS.Concrete
         {
             if (obj == null)
             {
-                Container.DrawAll();
+                IManager.Instance.Container.DrawAll();
             }
             else
             {

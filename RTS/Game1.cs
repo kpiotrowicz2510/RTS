@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using RTS.Abstract;
+using RTS.AI;
 using RTS.Concrete;
 using RTS.Mechanics;
 
@@ -17,11 +18,13 @@ namespace RTS
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         SpriteFont spriteFont;
+        private ComputerAI ai;
         private HUDControl hud;
         private GameManager manager;
         private CollisionControl collisionControl;
         private Camera2D _camera;
         private bool clicked = false;
+        private Texture2D rect;
         Dictionary<string, Texture2D> textures = new Dictionary<string, Texture2D>();
 
         public Game1()
@@ -30,6 +33,7 @@ namespace RTS
             //graphics.IsFullScreen = true;
             //graphics.PreferredBackBufferHeight = 768;
             //graphics.PreferredBackBufferWidth = 1366;
+            
             Content.RootDirectory = "Content";
         }
         
@@ -38,7 +42,8 @@ namespace RTS
             // TODO: Add your initialization logic here
             
             _camera = new Camera2D(GraphicsDevice.Viewport);
-            
+            rect = new Texture2D(GraphicsDevice, 1, 1);
+            IManager.Instance.rect = rect;
             base.Initialize();
         }
 
@@ -47,9 +52,9 @@ namespace RTS
             spriteBatch = new SpriteBatch(GraphicsDevice);
             spriteFont = Content.Load<SpriteFont>("debug");
 
-            manager = new GameManager(spriteBatch, GraphicsDevice, spriteFont);
+            manager = new GameManager();
             collisionControl = new CollisionControl(manager);
-
+           
             textures["GoldMine"] = Content.Load<Texture2D>("GoldMine");
             textures["Worker"] = Content.Load<Texture2D>("Worker");
             textures["Worker_MINE"] = Content.Load<Texture2D>("Worker_MINE");
@@ -57,20 +62,29 @@ namespace RTS
             textures["Fighter_ATTACK"] = Content.Load<Texture2D>("Fighter");
             textures["Headquarters"] = Content.Load<Texture2D>("Headquarters");
             manager.Textures = textures;
+
+            IManager.Instance.GraphicsDevice = GraphicsDevice;
+            IManager.Instance.SpriteFont = spriteFont;
+            IManager.Instance.SpriteBatch = spriteBatch;
+            IManager.Instance.Manager = manager;
+
             hud = new HUDControl()
             {
                 posPoint = new Vector2(0, 0),
                 size = new Point(300, 100),
-                spriteBatch = spriteBatch,
-                spriteFont = spriteFont,
-                graphicsDevice = GraphicsDevice,
-                graphics = graphics,
                 camera = _camera,
                 manager = manager,
                 currentPlayer = manager.Players.GetCurrentPlayer()
             };
+            hud.graphics = graphics;
             hud.init();
             _camera.OnCameraChange += hud.RedrawHud;
+
+            ai = new ComputerAI()
+            {
+                controlledPlayer = manager.Players.GetCurrentPlayer("Computer"),
+                GameManager = manager
+            };
             
         }
 
@@ -111,21 +125,23 @@ namespace RTS
             if (mouseState.LeftButton == ButtonState.Pressed&&clicked==false)
             {
                 clicked = true;
-                manager.Container.SelectGameObjectAtPoint(mouseState.X, mouseState.Y, manager.Players.GetCurrentPlayer());
-                if(manager.Container.SelectedGameObject!=null) manager.ClickableAreas.CheckAreas(mouseState.Position);
+                IManager.Instance.Container.SelectGameObjectAtPoint(mouseState.X, mouseState.Y, manager.Players.GetCurrentPlayer());
+                if(IManager.Instance.Container.SelectedGameObject!=null) manager.ClickableAreas.CheckAreas(mouseState.Position);
             }
             if (mouseState.RightButton == ButtonState.Pressed&&Keyboard.GetState().IsKeyDown(Keys.LeftControl))
             {
-                manager.Container.SelectedGameObject.actionControl.AddGoPoint(new Point(mouseState.X, mouseState.Y));
+                IManager.Instance.Container.SelectedGameObject.actionControl.AddGoPoint(new Point(mouseState.X, mouseState.Y));
             }else if (mouseState.RightButton == ButtonState.Pressed)
             {
-                manager.Container.SelectedGameObject.targetCoords = new Vector2(mouseState.X,mouseState.Y);
+                IManager.Instance.Container.SelectedGameObject.targetCoords = new Vector2(mouseState.X,mouseState.Y);
             }
 
             manager.UpdateOrganisms();
             
-            collisionControl.InvokeActions();
+            //collisionControl.InvokeActions();
             
+            //ai.Update();
+
             base.Update(gameTime);
         }
 
@@ -134,7 +150,7 @@ namespace RTS
             GraphicsDevice.Clear(Color.CornflowerBlue);
             var viewMatrix = _camera.GetViewMatrix();
             spriteBatch.Begin(transformMatrix: viewMatrix);
-            manager.Container.DrawAll();
+            IManager.Instance.Container.DrawAll();
             hud.DrawHUD();
             DrawRectangle(new Rectangle(Mouse.GetState().X, Mouse.GetState().Y, 10, 10), Color.Red);
             spriteBatch.End();
@@ -142,7 +158,6 @@ namespace RTS
         }
         private void DrawRectangle(Rectangle coords, Color color)
         {
-            var rect = new Texture2D(GraphicsDevice, 1, 1);
             rect.SetData(new[] { color });
             spriteBatch.Draw(rect, coords, color);
         }

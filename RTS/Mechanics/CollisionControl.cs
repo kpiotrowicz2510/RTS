@@ -30,9 +30,9 @@ namespace RTS.Mechanics
         }
         private void MiningWorker()
         {
-            foreach (var obj in manager.Container.ReturnGameObjectsOfType(typeof(Worker)))
+            foreach (var obj in IManager.Instance.Container.ReturnGameObjectsOfType(typeof(Worker)))
             {
-                var obj2 = manager.Container.CheckCollision(obj, typeof(GoldMine));
+                var obj2 = IManager.Instance.Container.CheckCollision(obj, typeof(GoldMine));
                 if (obj2!=null)
                 {
                     var mine = obj2 as GoldMine;
@@ -48,9 +48,9 @@ namespace RTS.Mechanics
 
         private void HQWorker()
         {
-            foreach (var obj in manager.Container.ReturnGameObjectsOfType(typeof(Worker)))
+            foreach (var obj in IManager.Instance.Container.ReturnGameObjectsOfType(typeof(Worker)))
             {
-                var obj2 = manager.Container.CheckCollision(obj, typeof(Headquarters));
+                var obj2 = IManager.Instance.Container.CheckCollision(obj, typeof(Headquarters));
                 if (obj2 != null)
                 {
                     var hq = obj2 as Headquarters;
@@ -71,13 +71,13 @@ namespace RTS.Mechanics
 
         private void BulletAttack()
         {
-            foreach (var obj in manager.Container.ReturnGameObjectsOfType(typeof(Bullet)))
+            foreach (var obj in IManager.Instance.Container.ReturnGameObjectsOfType(typeof(Bullet)))
             {
-                var obj2 = manager.Container.CheckBullet(obj);
+                var obj2 = IManager.Instance.Container.CheckBullet(obj);
                 if (obj2 != null)
                 {
                     obj2.properties["Health"] -= obj.properties["Damage"] - obj2.properties["Armor"]/10;
-                    manager.Container.DeleteObject(obj);
+                    IManager.Instance.Container.DeleteObject(obj);
                 }
             }
         }

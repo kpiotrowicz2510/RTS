@@ -20,7 +20,7 @@ namespace RTS.Concrete
             properties["BuildCost"] = 50;
             texture = Color.AliceBlue;
             CurrentJob = Job.DONE;
-            speed = 200;
+            speed = 150;
         }
 
         public override void Update()
@@ -31,7 +31,10 @@ namespace RTS.Concrete
             }
             else
             {
-                CurrentJob = Job.DONE;
+                if (CurrentJob != Job.WALK)
+                {
+                    CurrentJob = Job.DONE;
+                }
             }
             base.Update();
         }

@@ -47,12 +47,12 @@ namespace RTS.Concrete
 
         public override void Draw()
         {
-            var rect2 = new Texture2D(Container.GraphicsDevice, 1, 1);
+            var rect2 = IManager.Instance.rect;
             rect2.SetData(new[] { Color.Blue });
             
             if (currentBuild != null)
             {
-                Container.SpriteBatch.Draw(rect2,
+                IManager.Instance.SpriteBatch.Draw(rect2,
                     new Rectangle(new Point((int) (Coords.X - 5), (int) (Coords.Y - 20)),
                         new Point(currentBuild.buildState/2, 5)), Color.Blue);
             }
@@ -74,7 +74,7 @@ namespace RTS.Concrete
                 if (currentBuild.buildState == currentBuild.maxBuild)
                 {
                     Type type = currentBuild.gameObject.GetType();
-                    Container.CreateNewObject(type, Container.SelectedGameObject.Coords + new Vector2(50, -50), Owner);
+                    IManager.Instance.Container.CreateNewObject(type, Coords + new Vector2(50, -50), Owner);
                     currentBuild = null;
                 }
             }

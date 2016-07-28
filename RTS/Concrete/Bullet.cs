@@ -24,9 +24,9 @@ namespace RTS.Concrete
 
         public override void Draw()
         {
-            var rect = new Texture2D(Container.GraphicsDevice, 1, 1);
+            var rect = IManager.Instance.rect;
             rect.SetData(new[] {texture});
-            Container.SpriteBatch.Draw(rect, new Rectangle(new Point((int) Coords.X, (int) Coords.Y), new Point(2, 2)), texture);
+            IManager.Instance.SpriteBatch.Draw(rect, new Rectangle(new Point((int) Coords.X, (int) Coords.Y), new Point(2, 2)), texture);
         }
     }
 }

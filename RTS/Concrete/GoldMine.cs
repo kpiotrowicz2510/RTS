@@ -22,11 +22,11 @@ namespace RTS.Concrete
 
         public override void Draw()
         {
-            var rect2 = new Texture2D(Container.GraphicsDevice, 1, 1);
+            var rect2 = IManager.Instance.rect;
             rect2.SetData(new[] { Color.Yellow });
-            
 
-            Container.SpriteBatch.Draw(rect2,
+
+            IManager.Instance.SpriteBatch.Draw(rect2,
                     new Rectangle(new Point((int)(Coords.X - 5), (int)(Coords.Y - 20)),
                         new Point(properties["CurrentGoldResource"] / 20, 5)), Color.Yellow);
             

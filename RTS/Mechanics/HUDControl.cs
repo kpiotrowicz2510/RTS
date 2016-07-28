@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using RTS.Abstract;
 using RTS.Concrete;
 
 namespace RTS.Mechanics
@@ -14,22 +15,17 @@ namespace RTS.Mechanics
         public Player currentPlayer;
         public Vector2 posPoint;
         public Point size;
-        public SpriteBatch spriteBatch;
-        public SpriteFont spriteFont;
-        public GraphicsDevice graphicsDevice;
         public GraphicsDeviceManager graphics;
         public Camera2D camera;
         public GameManager manager;
         public Vector2 hudPosition;
         private bool redraw = true;
-        public HUDControl()
-        {
-            
-        }
-
+        private Texture2D rect;
+        
         public void init()
         {
             hudPosition = camera.Position + new Vector2(0, graphics.PreferredBackBufferHeight * 0.8f);
+            rect = IManager.Instance.rect;
         }
 
         public void RedrawHud()
@@ -43,20 +39,20 @@ namespace RTS.Mechanics
             {
                 info += "   " + prop.Key + ":" + prop.Value;
             }
-            var rect = new Texture2D(graphicsDevice, 1, 1);
+            
             rect.SetData(new[] { Color.Black });
             hudPosition = camera.Position + new Vector2(0, graphics.PreferredBackBufferHeight * 0.8f);
-            spriteBatch.Draw(rect, camera.Position+new Vector2(0,0),new Rectangle(0,0,graphics.PreferredBackBufferWidth, 30),Color.Black);
-            spriteBatch.DrawString(spriteFont, info, camera.Position + posPoint +new Vector2(10,5),Color.White);
-            
+            IManager.Instance.SpriteBatch.Draw(rect, camera.Position+new Vector2(0,0),new Rectangle(0,0,graphics.PreferredBackBufferWidth, 30),Color.Black);
+            IManager.Instance.SpriteBatch.DrawString(IManager.Instance.SpriteFont, info, camera.Position + posPoint +new Vector2(10,5),Color.White);
+
             //Draw Hud background
-            spriteBatch.Draw(rect, hudPosition, new Rectangle(0, 0, graphics.PreferredBackBufferWidth, (int)(graphics.PreferredBackBufferHeight*0.5)), Color.Black);
+            IManager.Instance.SpriteBatch.Draw(rect, hudPosition, new Rectangle(0, 0, graphics.PreferredBackBufferWidth, (int)(graphics.PreferredBackBufferHeight*0.5)), Color.Black);
             //draw minimap
             rect.SetData(new[] { Color.White });
-            spriteBatch.Draw(rect, hudPosition+new Vector2(0,10), new Rectangle(0, 0, 200, 130), Color.White);
+            IManager.Instance.SpriteBatch.Draw(rect, hudPosition+new Vector2(0,10), new Rectangle(0, 0, 200, 130), Color.White);
             //draw controls
             Texture2D t1, t2;
-            if (manager.Container.SelectedGameObject?.GetType() == typeof(Headquarters))
+            if (IManager.Instance.Container.SelectedGameObject?.GetType() == typeof(Headquarters))
             {
                 t1 = manager.Textures["Worker"];
                 t2 = manager.Textures["Fighter"];
@@ -67,23 +63,23 @@ namespace RTS.Mechanics
                 t2 = rect;
             }
             rect.SetData(new[] { Color.Blue });
-            spriteBatch.Draw(t1, hudPosition + new Vector2(graphics.PreferredBackBufferWidth - 200, 10), new Rectangle(0, 0, 50, 50), Color.White);
+            IManager.Instance.SpriteBatch.Draw(t1, hudPosition + new Vector2(graphics.PreferredBackBufferWidth - 200, 10), new Rectangle(0, 0, 50, 50), Color.White);
 
 
             rect.SetData(new[] { Color.Blue });
-            spriteBatch.Draw(t2, hudPosition + new Vector2(graphics.PreferredBackBufferWidth - 130, 10), new Rectangle(0, 0, 50, 50), Color.White);
+            IManager.Instance.SpriteBatch.Draw(t2, hudPosition + new Vector2(graphics.PreferredBackBufferWidth - 130, 10), new Rectangle(0, 0, 50, 50), Color.White);
 
             //draw objectinfo
             int i = 0;
-            if (manager.Container.SelectedGameObject == null) return;
-            spriteBatch.DrawString(spriteFont, "" + manager.Container.SelectedGameObject.GetType().Name,
+            if (IManager.Instance.Container.SelectedGameObject == null) return;
+            IManager.Instance.SpriteBatch.DrawString(IManager.Instance.SpriteFont, "" + IManager.Instance.Container.SelectedGameObject.GetType().Name,
                        hudPosition + new Vector2(graphics.PreferredBackBufferWidth / 2 - 170, 5) + new Vector2(0, i),
                        Color.White);
-            t1 = manager.Textures[manager.Container.SelectedGameObject.GetType().Name];
-            spriteBatch.Draw(t1, hudPosition + new Vector2(graphics.PreferredBackBufferWidth / 2 - 175, 5) + new Vector2(0, 20), new Rectangle(0, 0, 64, 64), Color.White);
-            foreach (var prop in manager.Container.SelectedGameObject.properties)
+            t1 = manager.Textures[IManager.Instance.Container.SelectedGameObject.GetType().Name];
+            IManager.Instance.SpriteBatch.Draw(t1, hudPosition + new Vector2(graphics.PreferredBackBufferWidth / 2 - 175, 5) + new Vector2(0, 20), new Rectangle(0, 0, 64, 64), Color.White);
+            foreach (var prop in IManager.Instance.Container.SelectedGameObject.properties)
             {
-                spriteBatch.DrawString(spriteFont, prop.Key + ":" + prop.Value,
+                IManager.Instance.SpriteBatch.DrawString(IManager.Instance.SpriteFont, prop.Key + ":" + prop.Value,
                     hudPosition + new Vector2(graphics.PreferredBackBufferWidth / 2, 5) + new Vector2(0, i),
                     Color.White);
                 i += 15;
@@ -116,11 +112,11 @@ namespace RTS.Mechanics
 
         public void NewWorker()
         {
-            if(manager.Container.SelectedGameObject.GetType()==typeof(Headquarters)) manager.Headquarters.AddBuild(new Worker());
+            if(IManager.Instance.Container.SelectedGameObject.GetType()==typeof(Headquarters)) manager.Headquarters.AddBuild(new Worker());
         }
         public void NewFighter()
         {
-            if (manager.Container.SelectedGameObject.GetType() == typeof(Headquarters)) manager.Headquarters.AddBuild(new Fighter());
+            if (IManager.Instance.Container.SelectedGameObject.GetType() == typeof(Headquarters)) manager.Headquarters.AddBuild(new Fighter());
         }
     }
 }
