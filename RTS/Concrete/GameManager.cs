@@ -32,10 +32,7 @@ namespace RTS.Concrete
         {
             Players.AddNewPlayer("Computer");
             Players.AddNewPlayer("kris");
-
-            //IManager.Instance.Container.CreateNewObject(typeof(Fighter), new Vector2(600, 350), Players.GetCurrentPlayer("Computer"));
-            //IManager.Instance.Container.CreateNewObject(typeof(Fighter), new Vector2(650, 350), //Players.GetCurrentPlayer("Computer"));
-            //IManager.Instance.Container.CreateNewObject(typeof(Fighter), new Vector2(550, 350), Players.GetCurrentPlayer("Computer"));
+            
             IManager.Instance.Container.CreateNewObject(typeof(Headquarters), new Vector2(1050, 350), Players.GetCurrentPlayer("Computer"));
             IManager.Instance.Container.CreateNewObject(typeof(GoldMine), new Vector2(950, 250), Players.GetCurrentPlayer("Computer"));
 
