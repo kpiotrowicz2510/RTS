@@ -16,11 +16,13 @@ namespace RTS.Abstract
     {
         public GameObject target;
         public GameManager manager;
+        public ObjectContainer Container;
+
         public int id;
         public string name;
         public Color texture;
         protected int speed;
-        public ObjectContainer Container;
+        
         public bool PlatformCollision { get; set; }
         public int OwnerID { get; set; }
         public Player Owner { get; set; }
@@ -76,18 +78,18 @@ namespace RTS.Abstract
             }
         }
 
-        public virtual void Draw(SpriteBatch spriteBatch, GraphicsDevice graphicsDevice, SpriteFont font, Player currentPlayer)
+        public virtual void Draw()
         {
-            var rect = new Texture2D(graphicsDevice, 1, 1);
+            var rect = new Texture2D(Container.GraphicsDevice, 1, 1);
             rect.SetData(new[] { texture });
-            var rect2 = new Texture2D(graphicsDevice, 1, 1);
+            var rect2 = new Texture2D(Container.GraphicsDevice, 1, 1);
             rect2.SetData(new[] { Color.Green });
-            var rect3 = new Texture2D(graphicsDevice, 1, 1);
+            var rect3 = new Texture2D(Container.GraphicsDevice, 1, 1);
             rect3.SetData(new[] { Color.Red });
             
             if (properties["Destroyable"] == 1)
             {
-                spriteBatch.Draw(rect2,
+                Container.SpriteBatch.Draw(rect2,
                     new Rectangle(new Point((int) (Coords.X - 5), (int) (Coords.Y - 10)),
                         new Point(properties["Health"]/5, 5)), Color.Green);
             }
@@ -97,24 +99,24 @@ namespace RTS.Abstract
                 Rectangle area = new Rectangle((int) Coords.X - properties["SightLine"],
                     (int) Coords.Y - properties["SightLine"], size.X + properties["SightLine"]*2,
                     size.Y + properties["SightLine"]*2);
-                spriteBatch.Draw(rect, area, Color.Green);
+                Container.SpriteBatch.Draw(rect, area, Color.Green);
             }
             if (isSelected)
             {
-                spriteBatch.Draw(rect, new Rectangle(new Point((int)(Coords.X-2), (int)(Coords.Y-2)), new Point(size.X+4, size.Y+4)), Color.Green);
+                Container.SpriteBatch.Draw(rect, new Rectangle(new Point((int)(Coords.X-2), (int)(Coords.Y-2)), new Point(size.X+4, size.Y+4)), Color.Green);
             }
-            if (Owner!=currentPlayer)
+            if (Owner!=manager.Players.GetCurrentPlayer())
             {
-                spriteBatch.Draw(rect3, new Rectangle(new Point((int)(Coords.X - 2), (int)(Coords.Y - 2)), new Point(size.X + 4, size.Y + 4)), Color.Red);
+                Container.SpriteBatch.Draw(rect3, new Rectangle(new Point((int)(Coords.X - 2), (int)(Coords.Y - 2)), new Point(size.X + 4, size.Y + 4)), Color.Red);
             }
             string name = GetType().Name;
             string job = CurrentJob.ToString();
             if (CurrentJob != Job.DONE)
             {
-                spriteBatch.Draw(manager.Textures[this.GetType().Name+"_"+job], new Rectangle(new Point((int)Coords.X, (int)Coords.Y), size), Color.CornflowerBlue);
+                Container.SpriteBatch.Draw(manager.Textures[this.GetType().Name+"_"+job], new Rectangle(new Point((int)Coords.X, (int)Coords.Y), size), Color.CornflowerBlue);
                 return;
             }
-            spriteBatch.Draw(manager.Textures[this.GetType().Name], new Rectangle(new Point((int) Coords.X,(int) Coords.Y),size), Color.CornflowerBlue);
+            Container.SpriteBatch.Draw(manager.Textures[this.GetType().Name], new Rectangle(new Point((int) Coords.X,(int) Coords.Y),size), Color.CornflowerBlue);
         }
     }
 }

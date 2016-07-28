@@ -36,9 +36,9 @@ namespace RTS
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            manager = new GameManager();
+            
             _camera = new Camera2D(GraphicsDevice.Viewport);
-            collisionControl = new CollisionControl(manager);
+            
             base.Initialize();
         }
 
@@ -46,6 +46,10 @@ namespace RTS
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
             spriteFont = Content.Load<SpriteFont>("debug");
+
+            manager = new GameManager(spriteBatch, GraphicsDevice, spriteFont);
+            collisionControl = new CollisionControl(manager);
+
             textures["GoldMine"] = Content.Load<Texture2D>("GoldMine");
             textures["Worker"] = Content.Load<Texture2D>("Worker");
             textures["Worker_MINE"] = Content.Load<Texture2D>("Worker_MINE");
@@ -67,6 +71,7 @@ namespace RTS
             };
             hud.init();
             _camera.OnCameraChange += hud.RedrawHud;
+            
         }
 
         protected override void UnloadContent()
@@ -129,7 +134,7 @@ namespace RTS
             GraphicsDevice.Clear(Color.CornflowerBlue);
             var viewMatrix = _camera.GetViewMatrix();
             spriteBatch.Begin(transformMatrix: viewMatrix);
-            manager.DrawOrganisms(spriteBatch,GraphicsDevice, spriteFont, manager.Players.GetCurrentPlayer());
+            manager.Container.DrawAll();
             hud.DrawHUD();
             DrawRectangle(new Rectangle(Mouse.GetState().X, Mouse.GetState().Y, 10, 10), Color.Red);
             spriteBatch.End();

@@ -14,6 +14,9 @@ namespace RTS.Abstract
         private Dictionary<string,GameObject> Objects = new Dictionary<string, GameObject>();
         public GameObject SelectedGameObject { get; set; }
         public GameManager manager;
+        public SpriteFont SpriteFont;
+        public SpriteBatch SpriteBatch;
+        public GraphicsDevice GraphicsDevice;
         private int objectCount=0;
         public void AddObject(string name, GameObject obj, Player Owner)
         {
@@ -153,11 +156,11 @@ namespace RTS.Abstract
             }
         }
 
-        public void DrawAll(SpriteBatch spriteBatch, GraphicsDevice graphicsDevice, SpriteFont spriteFont, Player currentPlayer)
+        public void DrawAll()
         {
             foreach (var obj in Objects)
             {
-                obj.Value.Draw(spriteBatch,graphicsDevice,spriteFont,currentPlayer);
+                obj.Value.Draw();
             }
         }
     }

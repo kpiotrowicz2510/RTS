@@ -22,11 +22,11 @@ namespace RTS.Concrete
             texture = Color.Yellow;
         }
 
-        public override void Draw(SpriteBatch spriteBatch, GraphicsDevice graphicsDevice, SpriteFont font, Player currentPlayer)
+        public override void Draw()
         {
-            var rect = new Texture2D(graphicsDevice, 1, 1);
+            var rect = new Texture2D(Container.GraphicsDevice, 1, 1);
             rect.SetData(new[] {texture});
-            spriteBatch.Draw(rect, new Rectangle(new Point((int) Coords.X, (int) Coords.Y), new Point(2, 2)), texture);
+            Container.SpriteBatch.Draw(rect, new Rectangle(new Point((int) Coords.X, (int) Coords.Y), new Point(2, 2)), texture);
         }
     }
 }

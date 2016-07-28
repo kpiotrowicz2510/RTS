@@ -17,11 +17,14 @@ namespace RTS.Concrete
         public ClickableAreas ClickableAreas;
         public Headquarters Headquarters;
         public Dictionary<string, Texture2D> Textures;
-        public GameManager()
+        public GameManager(SpriteBatch spriteBatch, GraphicsDevice graphicsDevice, SpriteFont spriteFont)
         {
             Container = new ObjectContainer()
             {
-                manager = this
+                manager = this,
+                SpriteFont = spriteFont,
+                GraphicsDevice = graphicsDevice,
+                SpriteBatch = spriteBatch
             };
             Players = new PlayerManager();
             ClickableAreas = new ClickableAreas();
@@ -77,11 +80,11 @@ namespace RTS.Concrete
         {
             if (obj == null)
             {
-                Container.DrawAll(spriteBatch, graphicsDevice, spriteFont,currentPlayer);
+                Container.DrawAll();
             }
             else
             {
-                obj.Draw(spriteBatch,graphicsDevice, spriteFont,currentPlayer);
+                obj.Draw();
             }
         }
     }

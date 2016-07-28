@@ -39,6 +39,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Abstract\ActionControl.cs" />
+    <Compile Include="Abstract\ClassContainer.cs" />
     <Compile Include="Abstract\Enemy.cs" />
     <Compile Include="Abstract\GameObject.cs" />
     <Compile Include="Abstract\ObjectContainer.cs" />

@@ -20,22 +20,17 @@ namespace RTS.Concrete
             texture = Color.Gold;
         }
 
-        public override void Draw(SpriteBatch spriteBatch, GraphicsDevice graphicsDevice, SpriteFont font, Player currentPlayer)
+        public override void Draw()
         {
-            var rect2 = new Texture2D(graphicsDevice, 1, 1);
+            var rect2 = new Texture2D(Container.GraphicsDevice, 1, 1);
             rect2.SetData(new[] { Color.Yellow });
-            //int i = 0;
-            //foreach (var prop in properties)
-            //{
-            //    spriteBatch.DrawString(font, prop.Key+":"+prop.Value, new Vector2((int)Coords.X, (int)Coords.Y - 100+i), Color.Black);
-            //    i += 10;
-            //}
             
-                spriteBatch.Draw(rect2,
+
+            Container.SpriteBatch.Draw(rect2,
                     new Rectangle(new Point((int)(Coords.X - 5), (int)(Coords.Y - 20)),
                         new Point(properties["CurrentGoldResource"] / 20, 5)), Color.Yellow);
             
-            base.Draw(spriteBatch, graphicsDevice, font, currentPlayer);
+            base.Draw();
         }
 
         public int TakeGold()

@@ -12,8 +12,8 @@ namespace RTS.Mechanics
     {
         public List<GameObject> list = new List<GameObject>();
         private List<Action> actionList = new List<Action>();
-        private Concrete.GameManager manager = null;
-        public CollisionControl(Concrete.GameManager man)
+        private GameManager manager = null;
+        public CollisionControl(GameManager man)
         {
             manager = man;
             actionList.Add(BulletAttack);
