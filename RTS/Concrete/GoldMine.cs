@@ -13,11 +13,21 @@ namespace RTS.Concrete
     {
         public GoldMine()
         {
-            this.properties["CurrentGoldResource"] = 1000;
+            this.properties["CurrentGoldResource"] = 2500;
             this.properties["GoldMineSpeed"] = 10;
             properties["Destroyable"] = 0;
             size = new Point(50,50);
             texture = Color.Gold;
+        }
+
+        public override void Update()
+        {
+            if (properties["CurrentGoldResource"] == 0)
+            {
+                properties["Health"] = -1;
+                properties["Destroyable"] = 1;
+            }
+            base.Update();
         }
 
         public override void Draw()
@@ -28,7 +38,7 @@ namespace RTS.Concrete
 
             IManager.Instance.SpriteBatch.Draw(rect2,
                     new Rectangle(new Point((int)(Coords.X - 5), (int)(Coords.Y - 20)),
-                        new Point(properties["CurrentGoldResource"] / 20, 5)), Color.Yellow);
+                        new Point(properties["CurrentGoldResource"] / 50, 5)), Color.Yellow);
             
             base.Draw();
         }

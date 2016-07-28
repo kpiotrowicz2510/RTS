@@ -64,6 +64,10 @@ namespace RTS.Concrete
             if (currentBuild == null&&HQBuildList.Count>0)
             {
                 currentBuild = HQBuildList[0];
+                if (properties["CurrentLoad"] > 0)
+                {
+                    properties["CurrentLoad"] -= HQBuildList[0].gameObject.properties["BuildCost"];
+                }
                 HQBuildList.Remove(currentBuild);
                 currentBuild.buildState = 0;
                 return;

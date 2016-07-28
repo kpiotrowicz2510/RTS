@@ -33,20 +33,17 @@ namespace RTS.Concrete
             Players.AddNewPlayer("Computer");
             Players.AddNewPlayer("kris");
 
-            IManager.Instance.Container.CreateNewObject(typeof(Worker), new Vector2(120, 50), Players.GetCurrentPlayer());
-            IManager.Instance.Container.CreateNewObject(typeof(Worker), new Vector2(200, 0), Players.GetCurrentPlayer());
-
-            IManager.Instance.Container.CreateNewObject(typeof(Fighter), new Vector2(600, 350), Players.GetCurrentPlayer("Computer"));
-            IManager.Instance.Container.CreateNewObject(typeof(Fighter), new Vector2(650, 350), Players.GetCurrentPlayer("Computer"));
-            IManager.Instance.Container.CreateNewObject(typeof(Fighter), new Vector2(550, 350), Players.GetCurrentPlayer("Computer"));
-            IManager.Instance.Container.CreateNewObject(typeof(Headquarters), new Vector2(750, 350), Players.GetCurrentPlayer("Computer"));
+            //IManager.Instance.Container.CreateNewObject(typeof(Fighter), new Vector2(600, 350), Players.GetCurrentPlayer("Computer"));
+            //IManager.Instance.Container.CreateNewObject(typeof(Fighter), new Vector2(650, 350), //Players.GetCurrentPlayer("Computer"));
+            //IManager.Instance.Container.CreateNewObject(typeof(Fighter), new Vector2(550, 350), Players.GetCurrentPlayer("Computer"));
+            IManager.Instance.Container.CreateNewObject(typeof(Headquarters), new Vector2(1050, 350), Players.GetCurrentPlayer("Computer"));
             IManager.Instance.Container.CreateNewObject(typeof(GoldMine), new Vector2(950, 250), Players.GetCurrentPlayer("Computer"));
 
-            IManager.Instance.Container.CreateNewObject(typeof(Fighter), new Vector2(200,200), Players.GetCurrentPlayer());
+
 
             var mine = new GoldMine()
             {
-                Coords = new Vector2(440, 100)
+                Coords = new Vector2(140, 300)
             };
 
             IManager.Instance.Container.AddObject("Mine1", mine, Players.GetCurrentPlayer());

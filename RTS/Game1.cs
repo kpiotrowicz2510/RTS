@@ -30,9 +30,9 @@ namespace RTS
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
-            //graphics.IsFullScreen = true;
-            //graphics.PreferredBackBufferHeight = 768;
-            //graphics.PreferredBackBufferWidth = 1366;
+            graphics.IsFullScreen = true;
+            graphics.PreferredBackBufferHeight = 768;
+            graphics.PreferredBackBufferWidth = 1366;
             
             Content.RootDirectory = "Content";
         }
@@ -138,9 +138,9 @@ namespace RTS
 
             manager.UpdateOrganisms();
             
-            //collisionControl.InvokeActions();
+            collisionControl.InvokeActions();
             
-            //ai.Update();
+            ai.Update();
 
             base.Update(gameTime);
         }
