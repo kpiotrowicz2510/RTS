@@ -83,6 +83,7 @@ namespace RTS.Concrete
                     currentBuild = null;
                 }
             }
+            base.Update();
         }
     }
 }

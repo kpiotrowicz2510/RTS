@@ -23,10 +23,23 @@ namespace RTS.Mechanics
         }
 
         public Vector2 Position { get; set; }
+        public event Action OnCameraChange;
         public float Rotation { get; set; }
         public float Zoom { get; set; }
         public Vector2 Origin { get; set; }
 
+        public void ChangePosition(Vector2 pos, bool plus)
+        {
+            if (plus)
+            {
+                Position += pos;
+            }
+            else
+            {
+                Position -= pos;
+            }
+            OnCameraChange?.Invoke();
+        }
         public Matrix GetViewMatrix()
         {
             return

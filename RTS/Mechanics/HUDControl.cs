@@ -21,6 +21,7 @@ namespace RTS.Mechanics
         public Camera2D camera;
         public GameManager manager;
         public Vector2 hudPosition;
+        private bool redraw = true;
         public HUDControl()
         {
             
@@ -31,6 +32,10 @@ namespace RTS.Mechanics
             hudPosition = camera.Position + new Vector2(0, graphics.PreferredBackBufferHeight * 0.8f);
         }
 
+        public void RedrawHud()
+        {
+            redraw = true;
+        }
         public void DrawHUD()
         {
             string info = "Player:" + currentPlayer.PlayerName;
@@ -50,12 +55,46 @@ namespace RTS.Mechanics
             rect.SetData(new[] { Color.White });
             spriteBatch.Draw(rect, hudPosition+new Vector2(0,10), new Rectangle(0, 0, 200, 130), Color.White);
             //draw controls
+            Texture2D t1, t2;
+            if (manager.Container.SelectedGameObject?.GetType() == typeof(Headquarters))
+            {
+                t1 = manager.Textures["Worker"];
+                t2 = manager.Textures["Fighter"];
+            }
+            else
+            {
+                t1 = rect;
+                t2 = rect;
+            }
             rect.SetData(new[] { Color.Blue });
-            spriteBatch.Draw(rect, hudPosition + new Vector2(graphics.PreferredBackBufferWidth - 200, 10), new Rectangle(0, 0, 50, 50), Color.White);
+            spriteBatch.Draw(t1, hudPosition + new Vector2(graphics.PreferredBackBufferWidth - 200, 10), new Rectangle(0, 0, 50, 50), Color.White);
 
 
             rect.SetData(new[] { Color.Blue });
-            spriteBatch.Draw(rect, hudPosition + new Vector2(graphics.PreferredBackBufferWidth - 130, 10), new Rectangle(0, 0, 50, 50), Color.White);
+            spriteBatch.Draw(t2, hudPosition + new Vector2(graphics.PreferredBackBufferWidth - 130, 10), new Rectangle(0, 0, 50, 50), Color.White);
+
+            //draw objectinfo
+            int i = 0;
+            if (manager.Container.SelectedGameObject == null) return;
+            spriteBatch.DrawString(spriteFont, "" + manager.Container.SelectedGameObject.GetType().Name,
+                       hudPosition + new Vector2(graphics.PreferredBackBufferWidth / 2 - 170, 5) + new Vector2(0, i),
+                       Color.White);
+            t1 = manager.Textures[manager.Container.SelectedGameObject.GetType().Name];
+            spriteBatch.Draw(t1, hudPosition + new Vector2(graphics.PreferredBackBufferWidth / 2 - 175, 5) + new Vector2(0, 20), new Rectangle(0, 0, 64, 64), Color.White);
+            foreach (var prop in manager.Container.SelectedGameObject.properties)
+            {
+                spriteBatch.DrawString(spriteFont, prop.Key + ":" + prop.Value,
+                    hudPosition + new Vector2(graphics.PreferredBackBufferWidth / 2, 5) + new Vector2(0, i),
+                    Color.White);
+                i += 15;
+            }
+
+            if (redraw == false)
+            {
+                return;
+            }
+            redraw = false;
+
             manager.ClickableAreas.RemoveAreas();
             ClickableArea area1 = new ClickableArea()
             {
@@ -71,19 +110,7 @@ namespace RTS.Mechanics
             };
             manager.ClickableAreas.AddArea(area2);
 
-            //draw objectinfo
-            int i = 0;
-            if (manager.Container.SelectedGameObject == null) return;
-            spriteBatch.DrawString(spriteFont,   "Type:" + manager.Container.SelectedGameObject.GetType().Name,
-                       hudPosition + new Vector2(graphics.PreferredBackBufferWidth / 2 - 170, 5) + new Vector2(0, i),
-                       Color.White);
-            foreach (var prop in manager.Container.SelectedGameObject.properties)
-                {
-                    spriteBatch.DrawString(spriteFont, prop.Key + ":" + prop.Value,
-                        hudPosition + new Vector2(graphics.PreferredBackBufferWidth/2, 5) + new Vector2(0, i),
-                        Color.White);
-                    i += 15;
-                }
+            
             
         }
 

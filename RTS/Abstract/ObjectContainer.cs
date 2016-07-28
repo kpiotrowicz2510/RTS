@@ -13,6 +13,7 @@ namespace RTS.Abstract
     {
         private Dictionary<string,GameObject> Objects = new Dictionary<string, GameObject>();
         public GameObject SelectedGameObject { get; set; }
+        public GameManager manager;
         private int objectCount=0;
         public void AddObject(string name, GameObject obj, Player Owner)
         {
@@ -20,6 +21,7 @@ namespace RTS.Abstract
             obj.Owner = Owner;
             obj.Container = this;
             obj.name = name;
+            obj.manager = manager;
             Owner.properties["Objects"]++;
             Objects[name] = obj;
         }
@@ -116,6 +118,7 @@ namespace RTS.Abstract
             obj.Coords = pos;
             obj.Owner = owner;
             obj.Container = this;
+            obj.manager = manager;
             obj.targetCoords = pos;
             obj.name = type.BaseType + "" + objectCount++;
             Objects.Add(obj.name,obj);

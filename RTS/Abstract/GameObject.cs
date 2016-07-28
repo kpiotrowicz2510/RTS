@@ -15,6 +15,7 @@ namespace RTS.Abstract
     public abstract class GameObject
     {
         public GameObject target;
+        public GameManager manager;
         public int id;
         public string name;
         public Color texture;
@@ -38,7 +39,8 @@ namespace RTS.Abstract
             properties["SightLine"] = 20;
             properties["BuildCost"] = 100;
             properties["LiveTime"] = -100;
-            size = new Point(10,10);
+            properties["Destroyable"] = 1;
+            size = new Point(32,32);
             isSelected = false;
         }
         public virtual void move(Vector2 coords, int speed)
@@ -80,13 +82,15 @@ namespace RTS.Abstract
             rect.SetData(new[] { texture });
             var rect2 = new Texture2D(graphicsDevice, 1, 1);
             rect2.SetData(new[] { Color.Green });
-            //int i = 0;
-            //foreach (var prop in properties)
-            //{
-            //    spriteBatch.DrawString(font, prop.Key+":"+prop.Value, new Vector2((int)Coords.X, (int)Coords.Y - 100+i), Color.Black);
-            //    i += 10;
-            //}
-            spriteBatch.Draw(rect2, new Rectangle(new Point((int)(Coords.X - 5), (int)(Coords.Y - 10)), new Point(properties["Health"]/5, 5)), Color.Green);
+            var rect3 = new Texture2D(graphicsDevice, 1, 1);
+            rect3.SetData(new[] { Color.Red });
+            
+            if (properties["Destroyable"] == 1)
+            {
+                spriteBatch.Draw(rect2,
+                    new Rectangle(new Point((int) (Coords.X - 5), (int) (Coords.Y - 10)),
+                        new Point(properties["Health"]/5, 5)), Color.Green);
+            }
             if (0 == 1)
             {
                 rect.SetData(new[] { new Color(Color.Yellow, 10) });
@@ -101,10 +105,16 @@ namespace RTS.Abstract
             }
             if (Owner!=currentPlayer)
             {
-                spriteBatch.Draw(rect, new Rectangle(new Point((int)Coords.X, (int)Coords.Y), size), Color.Red);
+                spriteBatch.Draw(rect3, new Rectangle(new Point((int)(Coords.X - 2), (int)(Coords.Y - 2)), new Point(size.X + 4, size.Y + 4)), Color.Red);
+            }
+            string name = GetType().Name;
+            string job = CurrentJob.ToString();
+            if (CurrentJob != Job.DONE)
+            {
+                spriteBatch.Draw(manager.Textures[this.GetType().Name+"_"+job], new Rectangle(new Point((int)Coords.X, (int)Coords.Y), size), Color.CornflowerBlue);
                 return;
             }
-            spriteBatch.Draw(rect, new Rectangle(new Point((int) Coords.X,(int) Coords.Y),size), texture);
+            spriteBatch.Draw(manager.Textures[this.GetType().Name], new Rectangle(new Point((int) Coords.X,(int) Coords.Y),size), Color.CornflowerBlue);
         }
     }
 }

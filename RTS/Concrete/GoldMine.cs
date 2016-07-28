@@ -11,9 +11,9 @@ namespace RTS.Concrete
 {
     class GoldMine: GameObject
     {
-        public GoldMine(int goldResource)
+        public GoldMine()
         {
-            this.properties["CurrentGoldResource"] = goldResource;
+            this.properties["CurrentGoldResource"] = 1000;
             this.properties["GoldMineSpeed"] = 10;
             properties["Destroyable"] = 0;
             size = new Point(50,50);

@@ -1,4 +1,5 @@
-﻿using System.Net.Mime;
+﻿using System.Collections.Generic;
+using System.Net.Mime;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -21,13 +22,14 @@ namespace RTS
         private CollisionControl collisionControl;
         private Camera2D _camera;
         private bool clicked = false;
+        Dictionary<string, Texture2D> textures = new Dictionary<string, Texture2D>();
 
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
-            graphics.IsFullScreen = true;
-            graphics.PreferredBackBufferHeight = 768;
-            graphics.PreferredBackBufferWidth = 1366;
+            //graphics.IsFullScreen = true;
+            //graphics.PreferredBackBufferHeight = 768;
+            //graphics.PreferredBackBufferWidth = 1366;
             Content.RootDirectory = "Content";
         }
         
@@ -44,6 +46,13 @@ namespace RTS
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
             spriteFont = Content.Load<SpriteFont>("debug");
+            textures["GoldMine"] = Content.Load<Texture2D>("GoldMine");
+            textures["Worker"] = Content.Load<Texture2D>("Worker");
+            textures["Worker_MINE"] = Content.Load<Texture2D>("Worker_MINE");
+            textures["Fighter"] = Content.Load<Texture2D>("Fighter");
+            textures["Fighter_ATTACK"] = Content.Load<Texture2D>("Fighter");
+            textures["Headquarters"] = Content.Load<Texture2D>("Headquarters");
+            manager.Textures = textures;
             hud = new HUDControl()
             {
                 posPoint = new Vector2(0, 0),
@@ -57,6 +66,7 @@ namespace RTS
                 currentPlayer = manager.Players.GetCurrentPlayer()
             };
             hud.init();
+            _camera.OnCameraChange += hud.RedrawHud;
         }
 
         protected override void UnloadContent()
@@ -69,32 +79,26 @@ namespace RTS
 
             var deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
             var keyboardState = Keyboard.GetState();
-
-            // rotation
-            if (keyboardState.IsKeyDown(Keys.Q))
-                _camera.Rotation -= deltaTime;
-
-            if (keyboardState.IsKeyDown(Keys.W))
-                _camera.Rotation += deltaTime;
+            var mouseState = Mouse.GetState();
 
             // movement
             if (keyboardState.IsKeyDown(Keys.Up))
-                _camera.Position -= new Vector2(0, 250) * deltaTime;
+                _camera.ChangePosition(new Vector2(0, 250) * deltaTime,false);
 
             if (keyboardState.IsKeyDown(Keys.Down))
-                _camera.Position += new Vector2(0, 250) * deltaTime;
+                _camera.ChangePosition(new Vector2(0, 250) * deltaTime, true);
 
             if (keyboardState.IsKeyDown(Keys.Left))
-                _camera.Position -= new Vector2(250, 0) * deltaTime;
+                _camera.ChangePosition(new Vector2(250, 0) * deltaTime, false);
 
             if (keyboardState.IsKeyDown(Keys.Right))
-                _camera.Position += new Vector2(250, 0) * deltaTime;
+                _camera.ChangePosition(new Vector2(250, 0) * deltaTime, true);
 
 
 
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-            var mouseState = Mouse.GetState();
+            
             if (mouseState.LeftButton == ButtonState.Released&&clicked==true)
             {
                 clicked = false;

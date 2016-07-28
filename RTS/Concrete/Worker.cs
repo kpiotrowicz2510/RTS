@@ -22,5 +22,18 @@ namespace RTS.Concrete
             CurrentJob = Job.DONE;
             speed = 200;
         }
+
+        public override void Update()
+        {
+            if (properties["CurrentWeight"] != 0)
+            {
+                CurrentJob = Job.MINE;
+            }
+            else
+            {
+                CurrentJob = Job.DONE;
+            }
+            base.Update();
+        }
     }
 }

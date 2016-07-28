@@ -16,9 +16,13 @@ namespace RTS.Concrete
         public PlayerManager Players;
         public ClickableAreas ClickableAreas;
         public Headquarters Headquarters;
+        public Dictionary<string, Texture2D> Textures;
         public GameManager()
         {
-            Container = new ObjectContainer();  
+            Container = new ObjectContainer()
+            {
+                manager = this
+            };
             Players = new PlayerManager();
             ClickableAreas = new ClickableAreas();
             this.Initialize();
@@ -26,19 +30,21 @@ namespace RTS.Concrete
 
         private void Initialize()
         {
-            Players.AddNewPlayer("michu");
+            Players.AddNewPlayer("Computer");
             Players.AddNewPlayer("kris");
 
             Container.CreateNewObject(typeof(Worker), new Vector2(120, 50), Players.GetCurrentPlayer());
             Container.CreateNewObject(typeof(Worker), new Vector2(200, 0), Players.GetCurrentPlayer());
 
-            Container.CreateNewObject(typeof(Fighter), new Vector2(600, 350), Players.GetCurrentPlayer("michu"));
-            Container.CreateNewObject(typeof(Fighter), new Vector2(650, 350), Players.GetCurrentPlayer("michu"));
-            Container.CreateNewObject(typeof(Fighter), new Vector2(550, 350), Players.GetCurrentPlayer("michu"));
+            Container.CreateNewObject(typeof(Fighter), new Vector2(600, 350), Players.GetCurrentPlayer("Computer"));
+            Container.CreateNewObject(typeof(Fighter), new Vector2(650, 350), Players.GetCurrentPlayer("Computer"));
+            Container.CreateNewObject(typeof(Fighter), new Vector2(550, 350), Players.GetCurrentPlayer("Computer"));
+            Container.CreateNewObject(typeof(Headquarters), new Vector2(750, 350), Players.GetCurrentPlayer("Computer"));
+            Container.CreateNewObject(typeof(GoldMine), new Vector2(950, 250), Players.GetCurrentPlayer("Computer"));
 
             Container.CreateNewObject(typeof(Fighter), new Vector2(200,200), Players.GetCurrentPlayer());
 
-            var mine = new GoldMine(1000)
+            var mine = new GoldMine()
             {
                 Coords = new Vector2(440, 100)
             };
@@ -48,7 +54,7 @@ namespace RTS.Concrete
 
             var HQ = new Headquarters()
             {
-                texture = Color.Black,
+                texture = Color.Brown,
                 Coords = new Vector2(20, 400)
             };
             Container.AddObject("HQ", HQ, Players.GetCurrentPlayer());

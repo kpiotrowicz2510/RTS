@@ -16,7 +16,7 @@ namespace RTS.Concrete
         {
             speed = 1000;
             properties["Damage"] = 20;
-            properties["LiveTime"] = 200;
+            properties["LiveTime"] = 100;
             size = new Point(3,3);
             properties["SightLine"] = 2;
             texture = Color.Yellow;

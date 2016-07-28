@@ -27,17 +27,19 @@ namespace RTS.Concrete
         {
             Rectangle area = new Rectangle((int)Coords.X - properties["SightLine"], (int)Coords.Y - properties["SightLine"], size.X + properties["SightLine"]*2, size.Y + properties["SightLine"]*2);
             var obj = Container.SelectGameObjectAtArea(area, Owner);
-            if (obj!=null&&obj.Owner != Owner)
+            if (obj!=null&&obj.Owner != Owner&&obj.properties["Destroyable"]==1)
             {
                 if (canShoot)
                 {
                     Attack(obj);
+                    CurrentJob = Job.ATTACK;
                     counterShoot = 0;
                     canShoot = false;
                 }
                 else
                 {
                     counterShoot++;
+                    CurrentJob = Job.DONE;
                     if (counterShoot >= shootFrequency)
                     {
                         counterShoot = 0;
