@@ -13,23 +13,24 @@ using RTS.Abstract;
 
 namespace RTS.Multiplayer
 {
+    public enum Status
+    {
+        Connected, Disconnected, ConnError
+    }
     class Connection
     {
-        Dictionary<string, GameObject> listSend  =new Dictionary<string, GameObject>();
-        Dictionary<string, GameObject> listGet = new Dictionary<string, GameObject>();
-        IPEndPoint ip = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 9999);
+        IEnumerable<KeyValuePair<string, GameObject>> listSend;
+        IEnumerable<KeyValuePair<string, GameObject>> listGet =null;
+        public IPEndPoint ip = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 9999);
         JavaScriptSerializer jsonx = new JavaScriptSerializer();
         TcpClient tcpclnt = new TcpClient();
-        Socket server = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+        public Socket server = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
         public Status ConnStatus;
-        public enum Status
-        {
-            Connected,Disconnected,ConnError
-        }
+        
   
         public Connection()
         {
-            
+ 
         }
 
         public void Close()
@@ -42,7 +43,7 @@ namespace RTS.Multiplayer
         {
             try
             {
-                tcpclnt.Connect(ip); //Connect to the server
+                server.Connect(ip); //Connect to the server
                 ConnStatus = Status.Connected;
             }
             catch (SocketException e)
@@ -53,64 +54,36 @@ namespace RTS.Multiplayer
             }
         }
 
-        public void SendData(Dictionary<string, GameObject> data)
+        public void SendData(IEnumerable<KeyValuePair<string, GameObject>> data)
         {
             listSend = data;
             if (ConnStatus == Status.Connected)
             {
-                Stream stm = tcpclnt.GetStream();
-
-                ASCIIEncoding asen = new ASCIIEncoding();
-                byte[] ba = asen.GetBytes(jsonx.Serialize(data["HQ"]));
-                //Console.WriteLine("Transmitting.....");
-
-                stm.Write(ba, 0, ba.Length);
-
-                stm.Flush();
-                
+                server.Send(Encoding.ASCII.GetBytes(jsonx.Serialize(data.First().Value)));
             }
         }
 
-        public Dictionary<string, GameObject> GetData()
+        public IEnumerable<KeyValuePair<string, GameObject>> GetData()
         {
-            Task a = new Task(GetDataA);
-            a.Start();
+            //Task a = new Task(GetDataX);
+            //a.Start();
             return listGet;
         }
 
-        async void GetDataA()
+        async void GetDataX()
         {
-            Task<string> task = ProcessData(ConnStatus, tcpclnt);
+            Task<string> task = DataGet(server);
             string data = await task;
 
-            //Dictionary<string, object> routes_list = (Dictionary<string, object>)jsonx.DeserializeObject(data);
-            //foreach (var obj in routes_list)
-            //{
-            //    var ob = obj.Value as GameObject;
-            //    int x = 0;
-            //}
-            GameObject obj = (GameObject)jsonx.DeserializeObject(data);
-            int x = 0;
         }
 
-        static async Task<string> ProcessData(Status ConnStatus, TcpClient tcpClient)
+        static async Task<string> DataGet(Socket client)
         {
-            if (ConnStatus == Status.Connected)
-            {
-                NetworkStream ns = tcpClient.GetStream();
-                byte[] message = new byte[25000];
-                int bytesRead;
-
-                bytesRead = ns.Read(message, 0, 25000);
-                ASCIIEncoding encoder = new ASCIIEncoding();
-
-                string bufferincmessage = encoder.GetString(message, 0, bytesRead);
-                
-                Console.WriteLine(bufferincmessage); //Write the data on the screen
-
-                return bufferincmessage;
-            }
-            return "";
+            byte[] data = new byte[4096];
+            int receivedDataLength = client.Receive(data);
+            string stringData = Encoding.ASCII.GetString(data, 0, receivedDataLength); //Decode the data received
+            //Console.WriteLine(stringData); //Write the data on the screen
+            return stringData;
         }
     }
 }

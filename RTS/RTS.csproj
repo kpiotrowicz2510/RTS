@@ -61,10 +61,13 @@
     <Compile Include="Mechanics\CollisionControl.cs" />
     <Compile Include="Mechanics\HUDControl.cs" />
     <Compile Include="Multiplayer\Connection.cs" />
+    <Compile Include="Multiplayer\Server.cs" />
+    <Compile Include="Multiplayer\Uncoder.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="MonoGame.Framework">
       <HintPath>$(MonoGameInstallDirectory)\MonoGame\v3.0\Assemblies\Windows\MonoGame.Framework.dll</HintPath>
     </Reference>

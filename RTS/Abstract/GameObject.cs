@@ -23,7 +23,7 @@ namespace RTS.Abstract
 
         public List<ObjectBuild> BuildList = new List<ObjectBuild>();
         public ObjectBuild currentBuild;
-
+        public string ObjType;
         public bool PlatformCollision { get; set; }
         public int OwnerID { get; set; }
         public Player Owner { get; set; }
@@ -45,6 +45,7 @@ namespace RTS.Abstract
             properties["Destroyable"] = 1;
             size = new Point(32,32);
             isSelected = false;
+            ObjType = this.GetType().Name;
         }
         public virtual void move(Vector2 coords, int speed)
         {

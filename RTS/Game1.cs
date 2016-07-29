@@ -1,5 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net.Mime;
+using System.Web.Configuration;
+using System.Web.Script.Serialization;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -29,13 +33,25 @@ namespace RTS
         private Connection client;
         Dictionary<string, Texture2D> textures = new Dictionary<string, Texture2D>();
         private float lastUpdate = 0;
+        JavaScriptSerializer jsonx = new JavaScriptSerializer();
+        Server s1;
+        private int ClientOrServer = 0;
+        private Uncoder uncoder = new Uncoder();
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
             //graphics.IsFullScreen = true;
             //graphics.PreferredBackBufferHeight = 768;
             //graphics.PreferredBackBufferWidth = 1366;
+            //int ip = Convert.ToInt32(Console.ReadLine());
             
+            //Console.WriteLine(client.ip.Address);
+
+            int k = Convert.ToInt32(Console.ReadLine());
+            ClientOrServer = k;
+
+           
+
             Content.RootDirectory = "Content";
         }
         
@@ -46,8 +62,18 @@ namespace RTS
             _camera = new Camera2D(GraphicsDevice.Viewport);
             rect = new Texture2D(GraphicsDevice, 1, 1);
             IManager.Instance.rect = rect;
-            client = new Connection();
-            client.Connect();
+
+            if (ClientOrServer == 1)
+            {
+                s1 = new Server(9999);
+                s1.Start();
+            }
+            else
+            {
+                client = new Connection();
+                client.Connect();
+            }
+
             base.Initialize();
         }
 
@@ -148,13 +174,27 @@ namespace RTS
             
             ai.Update();
 
-           
-            if (gameTime.TotalGameTime.Milliseconds > lastUpdate + 500)
+
+            //if (gameTime.TotalGameTime.Milliseconds > lastUpdate + 500)
+            //{
+
+            if (ClientOrServer == 1)
             {
-                client.SendData(IManager.Instance.Container.Objects);
-                client.GetData();
-                lastUpdate = gameTime.TotalGameTime.Milliseconds;
+                //s1.SendData(IManager.Instance.Container.Objects.Where(o => o.Value.Owner == IManager.Instance.Manager.Players.GetCurrentPlayer()));
+               // string data = s1.GetDataX();
+               // uncoder.Decoder(data);
             }
+            else
+            {
+                client.SendData(
+                    IManager.Instance.Container.Objects.Where(
+                        o => o.Value.Owner == IManager.Instance.Manager.Players.GetCurrentPlayer()));
+                client.GetData();
+            }
+            
+            //Console.WriteLine(ob["name"].ToString());
+            lastUpdate = gameTime.TotalGameTime.Milliseconds;
+           // }
 
             base.Update(gameTime);
         }
@@ -166,6 +206,7 @@ namespace RTS
             spriteBatch.Begin(transformMatrix: viewMatrix);
             IManager.Instance.Container.DrawAll();
             hud.DrawHUD();
+            //spriteBatch.DrawString(spriteFont, client.server.LocalEndPoint.ToString(),new Vector2(600, 0), Color.White);
             DrawRectangle(new Rectangle(Mouse.GetState().X, Mouse.GetState().Y, 10, 10), Color.Red);
             spriteBatch.End();
             base.Draw(gameTime);
