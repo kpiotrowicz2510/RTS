@@ -26,7 +26,7 @@ namespace RTS.Concrete
         {
             var rect = IManager.Instance.rect;
             rect.SetData(new[] {texture});
-            IManager.Instance.SpriteBatch.Draw(rect, new Rectangle(new Point((int) Coords.X, (int) Coords.Y), new Point(2, 2)), texture);
+            IManager.Instance.SpriteBatch.Draw(rect, new Rectangle(new Point((int) Coords.X, (int) Coords.Y), size), texture);
         }
     }
 }

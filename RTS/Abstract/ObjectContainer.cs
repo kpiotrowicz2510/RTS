@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.Web.Script.Serialization;
 using RTS.Concrete;
 
 namespace RTS.Abstract
@@ -97,6 +99,18 @@ namespace RTS.Abstract
             }
             return null;
         }
+
+        //public override string ToString()
+        //{
+        //    //JavaScriptSerializer jsonx  =new JavaScriptSerializer();
+        //    //string json = "";
+            
+        //    //    json = new JavaScriptSerializer().Serialize(this);
+        //    //    Debug.WriteLine(json);
+            
+        //    //dynamic d = jsonx?.Deserialize<G>(json);
+        //    //return "";
+        //}
 
         public GameObject SelectGameObjectAtPoint(int x, int y, Player owner, bool ret=false, int sightLine=40)
         {

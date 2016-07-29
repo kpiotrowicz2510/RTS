@@ -7,6 +7,7 @@ using RTS.Abstract;
 using RTS.AI;
 using RTS.Concrete;
 using RTS.Mechanics;
+using RTS.Multiplayer;
 
 namespace RTS
 {
@@ -25,14 +26,15 @@ namespace RTS
         private Camera2D _camera;
         private bool clicked = false;
         private Texture2D rect;
+        private Connection client;
         Dictionary<string, Texture2D> textures = new Dictionary<string, Texture2D>();
 
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
-            graphics.IsFullScreen = true;
-            graphics.PreferredBackBufferHeight = 768;
-            graphics.PreferredBackBufferWidth = 1366;
+            //graphics.IsFullScreen = true;
+            //graphics.PreferredBackBufferHeight = 768;
+            //graphics.PreferredBackBufferWidth = 1366;
             
             Content.RootDirectory = "Content";
         }
@@ -44,6 +46,8 @@ namespace RTS
             _camera = new Camera2D(GraphicsDevice.Viewport);
             rect = new Texture2D(GraphicsDevice, 1, 1);
             IManager.Instance.rect = rect;
+            client = new Connection();
+            client.Connect();
             base.Initialize();
         }
 
@@ -61,6 +65,8 @@ namespace RTS
             textures["Fighter"] = Content.Load<Texture2D>("Fighter");
             textures["Fighter_ATTACK"] = Content.Load<Texture2D>("Fighter");
             textures["Headquarters"] = Content.Load<Texture2D>("Headquarters");
+            textures["Tower"] = Content.Load<Texture2D>("Tower");
+            textures["Tower_ATTACK"] = Content.Load<Texture2D>("Tower");
             manager.Textures = textures;
 
             IManager.Instance.GraphicsDevice = GraphicsDevice;
@@ -141,6 +147,8 @@ namespace RTS
             collisionControl.InvokeActions();
             
             ai.Update();
+
+            client.SendData(IManager.Instance.Container.Objects);
 
             base.Update(gameTime);
         }

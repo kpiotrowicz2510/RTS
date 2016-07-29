@@ -17,33 +17,16 @@ namespace RTS.Concrete
     }
     public class Headquarters:GameObject
     {
-        public List<ObjectBuild> HQBuildList = new List<ObjectBuild>();
-        private ObjectBuild currentBuild;
         private bool Created = false;
         public Headquarters()
         {
-            properties["MaxLoad"] = 1000;
+            properties["MaxLoad"] = 100000;
             properties["SightLine"] = 50;
             properties["CurrentLoad"] = 0;
             size = new Point(50,30);
         }
 
-        public void AddBuild(GameObject obj)
-        {
-            ObjectBuild build = new ObjectBuild()
-            {
-                gameObject=obj
-            };
-            if (Owner.properties["Gold"] >= obj.properties["BuildCost"])
-            {
-                Owner.properties["Gold"] -= obj.properties["BuildCost"];
-                HQBuildList.Add(build);
-            }
-            else
-            {
-                //Error
-            }
-        }
+        
 
         public override void Draw()
         {
@@ -61,14 +44,14 @@ namespace RTS.Concrete
 
         public override void Update()
         {
-            if (currentBuild == null&&HQBuildList.Count>0)
+            if (currentBuild == null&&BuildList.Count>0)
             {
-                currentBuild = HQBuildList[0];
+                currentBuild = BuildList[0];
                 if (properties["CurrentLoad"] > 0)
                 {
-                    properties["CurrentLoad"] -= HQBuildList[0].gameObject.properties["BuildCost"];
+                    properties["CurrentLoad"] -= BuildList[0].gameObject.properties["BuildCost"];
                 }
-                HQBuildList.Remove(currentBuild);
+                BuildList.Remove(currentBuild);
                 currentBuild.buildState = 0;
                 return;
             }

@@ -40,16 +40,17 @@ namespace RTS.Concrete
 
             var mine = new GoldMine()
             {
-                Coords = new Vector2(140, 300)
+                Coords = new Vector2(140, 200)
             };
 
             IManager.Instance.Container.AddObject("Mine1", mine, Players.GetCurrentPlayer());
-            
+
+            IManager.Instance.Container.ToString();
 
             var HQ = new Headquarters()
             {
                 texture = Color.Brown,
-                Coords = new Vector2(20, 400)
+                Coords = new Vector2(20, 300)
             };
             IManager.Instance.Container.AddObject("HQ", HQ, Players.GetCurrentPlayer());
             Headquarters = HQ;

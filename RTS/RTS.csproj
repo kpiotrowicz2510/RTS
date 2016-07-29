@@ -52,6 +52,7 @@
     <Compile Include="Concrete\Headquarters.cs" />
     <Compile Include="Concrete\Player.cs" />
     <Compile Include="Concrete\PlayerManager.cs" />
+    <Compile Include="Concrete\Tower.cs" />
     <Compile Include="Concrete\Worker.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="Mechanics\ActionWalkControl.cs" />
@@ -59,6 +60,7 @@
     <Compile Include="Mechanics\ClickableArea.cs" />
     <Compile Include="Mechanics\CollisionControl.cs" />
     <Compile Include="Mechanics\HUDControl.cs" />
+    <Compile Include="Multiplayer\Connection.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -67,6 +69,7 @@
       <HintPath>$(MonoGameInstallDirectory)\MonoGame\v3.0\Assemblies\Windows\MonoGame.Framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>

@@ -8,27 +8,25 @@ using RTS.Abstract;
 
 namespace RTS.Concrete
 {
-    public class Fighter: GameObject
+    class Tower:GameObject
     {
+        public static int BuildCost = 250;
         private int shootFrequency = 100;
         private int counterShoot = 0;
         private bool canShoot = true;
-        public static int BuildCost = 150;
-        public Fighter()
+        public Tower()
         {
-            properties["Damage"] = 10;
-            properties["Armor"] = 20;
-            properties["SightLine"] = 60;
-            properties["BuildCost"] = 150;
-            texture = Color.Blue;
-            speed = 300;
+            properties["SightLine"] = 200;
+            properties["BuildCost"] = 250;
+            properties["Damage"] = 15;
+            properties["Armor"] = 30;
+            speed = 0;
         }
-
         public override void Update()
         {
-            Rectangle area = new Rectangle((int)Coords.X - properties["SightLine"], (int)Coords.Y - properties["SightLine"], size.X + properties["SightLine"]*2, size.Y + properties["SightLine"]*2);
+            Rectangle area = new Rectangle((int)Coords.X - properties["SightLine"], (int)Coords.Y - properties["SightLine"], size.X + properties["SightLine"] * 2, size.Y + properties["SightLine"] * 2);
             var obj = IManager.Instance.Container.SelectGameObjectAtAreaToAttack(area, Owner);
-            if (obj!=null&&obj.Owner != Owner&&obj.properties["Destroyable"]==1)
+            if (obj != null && obj.Owner != Owner && obj.properties["Destroyable"] == 1)
             {
                 if (canShoot)
                 {
@@ -55,7 +53,8 @@ namespace RTS.Concrete
         {
             var bullet = IManager.Instance.Container.CreateNewObject(typeof(Bullet), Coords, Owner);
             bullet.target = this;
-            bullet.targetCoords = obj.Coords+new Vector2(2,2);
+            bullet.size = new Point(10,10);
+            bullet.targetCoords = obj.Coords + new Vector2(2, 2);
         }
     }
 }

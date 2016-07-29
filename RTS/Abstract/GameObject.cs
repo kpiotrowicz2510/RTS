@@ -20,7 +20,10 @@ namespace RTS.Abstract
         public string name;
         public Color texture;
         protected int speed;
-        
+
+        public List<ObjectBuild> BuildList = new List<ObjectBuild>();
+        public ObjectBuild currentBuild;
+
         public bool PlatformCollision { get; set; }
         public int OwnerID { get; set; }
         public Player Owner { get; set; }
@@ -51,12 +54,33 @@ namespace RTS.Abstract
 
         public virtual void Update()
         {
+            if (currentBuild == null && BuildList.Count > 0)
+            {
+                currentBuild = BuildList[0];
+                //if (properties["CurrentLoad"] > 0)
+                //{
+                //    properties["CurrentLoad"] -= BuildList[0].gameObject.properties["BuildCost"];
+                //}
+                BuildList.Remove(currentBuild);
+                currentBuild.buildState = 0;
+                return;
+            }
+            if (currentBuild != null)
+            {
+                currentBuild.buildState += 1;
+                if (currentBuild.buildState == currentBuild.maxBuild)
+                {
+                    Type type = currentBuild.gameObject.GetType();
+                    IManager.Instance.Container.CreateNewObject(type, Coords + new Vector2(50, -50), Owner);
+                    currentBuild = null;
+                }
+            }
             if (Vector2.Distance(this.targetCoords, this.Coords) > 2)
             {
-                float xMove = targetCoords.X - Coords.X;
-                float yMove = targetCoords.Y - Coords.Y;
+                float xMove = targetCoords.X - Coords.X > 0 ? 1 : -1;
+                float yMove = targetCoords.Y - Coords.Y > 0 ? 1 : -1;
 
-                Coords = new Vector2(xMove*speed/10000 + Coords.X, yMove*speed/10000 + Coords.Y);
+                Coords = new Vector2(xMove*speed/1000 + Coords.X, yMove*speed/1000 + Coords.Y);
             }
             else
             {
@@ -84,7 +108,14 @@ namespace RTS.Abstract
             rect2.SetData(new[] { Color.Green });
             var rect3 = IManager.Instance.rect;
             rect3.SetData(new[] { Color.Red });
-            
+
+            if (currentBuild != null)
+            {
+                IManager.Instance.SpriteBatch.Draw(rect2,
+                    new Rectangle(new Point((int)(Coords.X - 5), (int)(Coords.Y - 20)),
+                        new Point(currentBuild.buildState / 2, 5)), Color.Blue);
+            }
+
             if (properties["Destroyable"] == 1)
             {
                 IManager.Instance.SpriteBatch.Draw(rect2,
@@ -115,6 +146,22 @@ namespace RTS.Abstract
                 return;
             }
             IManager.Instance.SpriteBatch.Draw(IManager.Instance.Manager.Textures[this.GetType().Name], new Rectangle(new Point((int) Coords.X,(int) Coords.Y),size), Color.CornflowerBlue);
+        }
+        public void AddBuild(GameObject obj)
+        {
+            ObjectBuild build = new ObjectBuild()
+            {
+                gameObject = obj
+            };
+            if (Owner.properties["Gold"] >= obj.properties["BuildCost"])
+            {
+                Owner.properties["Gold"] -= obj.properties["BuildCost"];
+                BuildList.Add(build);
+            }
+            else
+            {
+                //Error
+            }
         }
     }
 }

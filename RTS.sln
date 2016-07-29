@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RTS", "RTS\RTS.csproj", "{C
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RTS.Tests", "RTS.Tests\RTS.Tests.csproj", "{F04979F2-855E-4EF3-95A1-5A3F629039A7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RTS.Server", "RTS.Server\RTS.Server.csproj", "{77CBD32D-1987-47BE-9E75-1736A0E82FD1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,6 +31,14 @@ Global
 		{F04979F2-855E-4EF3-95A1-5A3F629039A7}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F04979F2-855E-4EF3-95A1-5A3F629039A7}.Release|x86.ActiveCfg = Release|Any CPU
 		{F04979F2-855E-4EF3-95A1-5A3F629039A7}.Release|x86.Build.0 = Release|Any CPU
+		{77CBD32D-1987-47BE-9E75-1736A0E82FD1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{77CBD32D-1987-47BE-9E75-1736A0E82FD1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{77CBD32D-1987-47BE-9E75-1736A0E82FD1}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{77CBD32D-1987-47BE-9E75-1736A0E82FD1}.Debug|x86.Build.0 = Debug|Any CPU
+		{77CBD32D-1987-47BE-9E75-1736A0E82FD1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{77CBD32D-1987-47BE-9E75-1736A0E82FD1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{77CBD32D-1987-47BE-9E75-1736A0E82FD1}.Release|x86.ActiveCfg = Release|Any CPU
+		{77CBD32D-1987-47BE-9E75-1736A0E82FD1}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

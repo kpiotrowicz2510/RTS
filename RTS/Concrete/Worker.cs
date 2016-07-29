@@ -10,6 +10,7 @@ namespace RTS.Concrete
 {
     class Worker: GameObject
     {
+        public static int BuildCost = 50;
         public int MaxWeight = 10;
         public int CurrentWeight = 0;
 

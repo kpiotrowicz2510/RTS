@@ -52,16 +52,26 @@ namespace RTS.Mechanics
             IManager.Instance.SpriteBatch.Draw(rect, hudPosition+new Vector2(0,10), new Rectangle(0, 0, 200, 130), Color.White);
             //draw controls
             Texture2D t1, t2;
+            Action t1Action, t2Action;
+            t1Action = NewWorker;
+            t2Action = NewFighter;
+            t1 = rect;
+            t2 = rect;
             if (IManager.Instance.Container.SelectedGameObject?.GetType() == typeof(Headquarters))
             {
                 t1 = manager.Textures["Worker"];
                 t2 = manager.Textures["Fighter"];
+                t1Action = NewWorker;
+                t2Action = NewFighter;
             }
-            else
+            if (IManager.Instance.Container.SelectedGameObject?.GetType() == typeof(Worker))
             {
-                t1 = rect;
-                t2 = rect;
+                t1 = manager.Textures["Tower"];
+                t1Action = NewTower;
+                redraw = true;
+                //t2 = manager.Textures["Fighter"];
             }
+
             rect.SetData(new[] { Color.Blue });
             IManager.Instance.SpriteBatch.Draw(t1, hudPosition + new Vector2(graphics.PreferredBackBufferWidth - 200, 10), new Rectangle(0, 0, 50, 50), Color.White);
 
@@ -95,19 +105,25 @@ namespace RTS.Mechanics
             ClickableArea area1 = new ClickableArea()
             {
                 area = new Rectangle((hudPosition + new Vector2(graphics.PreferredBackBufferWidth - 200, 10)).ToPoint(), new Point(50, 50)),
-                function = NewWorker
+                function = t1Action
             };
             manager.ClickableAreas.AddArea(area1);
 
             ClickableArea area2 = new ClickableArea()
             {
                 area = new Rectangle((hudPosition + new Vector2(graphics.PreferredBackBufferWidth - 130, 10)).ToPoint(), new Point(50, 50)),
-                function = NewFighter
+                function = t2Action
             };
             manager.ClickableAreas.AddArea(area2);
 
             
             
+        }
+
+        private void NewTower()
+        {
+            if (IManager.Instance.Container.SelectedGameObject.GetType() == typeof(Worker))
+                IManager.Instance.Container.SelectedGameObject.AddBuild(new Tower());
         }
 
         public void NewWorker()

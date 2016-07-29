@@ -16,7 +16,7 @@ namespace RTS.Concrete
             PlayerName = name;
             properties["score"] = 0;
             properties["Fuel"] = 100;
-            properties["Gold"] = 50;
+            properties["Gold"] = 500;
             properties["Uranium"] = 100;
             properties["Objects"] = 0;
         }
