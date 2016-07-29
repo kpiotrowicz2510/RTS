@@ -28,7 +28,7 @@ namespace RTS
         private Texture2D rect;
         private Connection client;
         Dictionary<string, Texture2D> textures = new Dictionary<string, Texture2D>();
-
+        private float lastUpdate = 0;
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -148,7 +148,13 @@ namespace RTS
             
             ai.Update();
 
-            client.SendData(IManager.Instance.Container.Objects);
+           
+            if (gameTime.TotalGameTime.Milliseconds > lastUpdate + 500)
+            {
+                client.SendData(IManager.Instance.Container.Objects);
+                client.GetData();
+                lastUpdate = gameTime.TotalGameTime.Milliseconds;
+            }
 
             base.Update(gameTime);
         }
