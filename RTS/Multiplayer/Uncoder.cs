@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Script.Serialization;
@@ -49,6 +50,15 @@ namespace RTS.Multiplayer
             obj.name = ob["name"];
             obj.Coords = new Vector2(Convert.ToInt32(ob["Coords"]["X"]), Convert.ToInt32(ob["Coords"]["Y"])) + new Vector2(200,200);
             obj.Owner = IManager.Instance.Manager.Players.GetCurrentPlayer(ob["Owner"]["PlayerName"]);
+            dynamic x = ob["properties"];
+            Dictionary<string, int> prop = new Dictionary<string, int>();
+            foreach (var v in x)
+            {
+                string key = v.Key; 
+                int value = v.Value;
+                prop.Add(key,value);
+            }
+            obj.properties = prop;
             //obj.name = ob["name"];
 
             return obj;

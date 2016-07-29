@@ -13,7 +13,7 @@ namespace RTS.Concrete
     {
         public GoldMine()
         {
-            this.properties["CurrentGoldResource"] = 2500;
+            this.properties["CurrentGoldResource"] = 200;
             this.properties["GoldMineSpeed"] = 10;
             properties["Destroyable"] = 0;
             size = new Point(50,50);
@@ -38,7 +38,7 @@ namespace RTS.Concrete
 
             IManager.Instance.SpriteBatch.Draw(rect2,
                     new Rectangle(new Point((int)(Coords.X - 5), (int)(Coords.Y - 20)),
-                        new Point(properties["CurrentGoldResource"] / 50, 5)), Color.Yellow);
+                        new Point(properties["CurrentGoldResource"] / 5, 5)), Color.Yellow);
             
             base.Draw();
         }

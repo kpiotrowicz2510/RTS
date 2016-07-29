@@ -165,14 +165,18 @@ namespace RTS
                 IManager.Instance.Container.SelectGameObjectAtPoint(mouseState.X, mouseState.Y, manager.Players.GetCurrentPlayer());
                 if(IManager.Instance.Container.SelectedGameObject!=null) manager.ClickableAreas.CheckAreas(mouseState.Position);
             }
-            if (mouseState.RightButton == ButtonState.Pressed&&Keyboard.GetState().IsKeyDown(Keys.LeftControl))
+            if (IManager.Instance.Container.SelectedGameObject != null)
             {
-                IManager.Instance.Container.SelectedGameObject.actionControl.AddGoPoint(new Point(mouseState.X, mouseState.Y));
-            }else if (mouseState.RightButton == ButtonState.Pressed)
-            {
-                IManager.Instance.Container.SelectedGameObject.targetCoords = new Vector2(mouseState.X,mouseState.Y);
+                if (mouseState.RightButton == ButtonState.Pressed && Keyboard.GetState().IsKeyDown(Keys.LeftControl))
+                {
+                    IManager.Instance.Container.SelectedGameObject.actionControl.AddGoPoint(new Point(mouseState.X,
+                        mouseState.Y));
+                }
+                else if (mouseState.RightButton == ButtonState.Pressed)
+                {
+                    IManager.Instance.Container.SelectedGameObject.targetCoords = new Vector2(mouseState.X, mouseState.Y);
+                }
             }
-
             manager.UpdateOrganisms();
             
             collisionControl.InvokeActions();
