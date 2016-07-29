@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Mime;
 using System.Threading;
 using System.Web.Configuration;
@@ -45,7 +46,6 @@ namespace RTS
             //graphics.IsFullScreen = true;
             //graphics.PreferredBackBufferHeight = 768;
             //graphics.PreferredBackBufferWidth = 1366;
-            //int ip = Convert.ToInt32(Console.ReadLine());
             
             //Console.WriteLine(client.ip.Address);
 
@@ -75,6 +75,8 @@ namespace RTS
             {
                 client = new Connection();
                 client.Uncoder = uncoder;
+                string ip = (Console.ReadLine());
+                client.ip = new IPEndPoint(IPAddress.Parse(ip), 9999);
                 client.Connect();
             }
 
