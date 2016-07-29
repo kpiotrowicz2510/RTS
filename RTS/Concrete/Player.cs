@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Xna.Framework;
 
 namespace RTS.Concrete
 {
     public class Player
     {
         public string PlayerName { get; set; }
+        public Vector2 startingPosition { get; set; }
         public int PlayerID { get; set; }
         public Dictionary<string,int> properties = new Dictionary<string, int>();
         public Player(string name)

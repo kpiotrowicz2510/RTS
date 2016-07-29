@@ -19,49 +19,65 @@ namespace RTS.Multiplayer
             
         }
 
-        public GameObject Decoder(string data)
+        public void Decoder(string data)
         {
             if (data == null)
             {
-                return null;
+                return;
             }
             GameObject obj=null;
-            dynamic ob = jsonx.DeserializeObject(data);
-
-            string type = ob["ObjType"].ToString();
-            switch (type)
+            dynamic obx = jsonx.DeserializeObject(data);
+            foreach (var VARIABLE in IManager.Instance.Container.Objects.Where(o => o.Value.Owner == IManager.Instance.Manager.Players.GetCurrentPlayer("Computer")).ToList())
             {
-                case "Headquarters":
-                    obj = new Headquarters();
-                    break;
-                case "Worker":
-                    obj = new Worker();
-                    break;
-                case "Fighter":
-                    obj = new Fighter();
-                    break;
-                case "Tower":
-                    obj = new Tower();
-                    break;
-                case "GoldMine":
-                    obj = new GoldMine();
-                    break;
+                GameObject x;
+                IManager.Instance.Container.Objects.TryRemove(VARIABLE.Key,out x);
             }
-            obj.name = ob["name"];
-            obj.Coords = new Vector2(Convert.ToInt32(ob["Coords"]["X"]), Convert.ToInt32(ob["Coords"]["Y"])) + new Vector2(200,200);
-            obj.Owner = IManager.Instance.Manager.Players.GetCurrentPlayer(ob["Owner"]["PlayerName"]);
-            dynamic x = ob["properties"];
-            Dictionary<string, int> prop = new Dictionary<string, int>();
-            foreach (var v in x)
+            
+            foreach (var ob0 in obx)
             {
-                string key = v.Key; 
-                int value = v.Value;
-                prop.Add(key,value);
+                dynamic ob = ob0["Value"];
+                string type = ob["ObjType"].ToString();
+                switch (type)
+                {
+                    case "Headquarters":
+                        obj = new Headquarters();
+                        break;
+                    case "Worker":
+                        obj = new Worker();
+                        break;
+                    case "Fighter":
+                        obj = new Fighter();
+                        break;
+                    case "Tower":
+                        obj = new Tower();
+                        break;
+                    case "GoldMine":
+                        obj = new GoldMine();
+                        break;
+                }
+                obj.name = ob["name"];
+                obj.Coords = new Vector2(Convert.ToInt32(ob["Coords"]["X"]), Convert.ToInt32(ob["Coords"]["Y"]))+new Vector2(200,0);
+                //obj.Owner = IManager.Instance.Manager.Players.GetCurrentPlayer(ob["Owner"]["PlayerName"]);
+                obj.Owner  = IManager.Instance.Manager.Players.GetCurrentPlayer("Computer");
+                dynamic x = ob["properties"];
+                Dictionary<string, int> prop = new Dictionary<string, int>();
+                foreach (var v in x)
+                {
+                    string key = v.Key;
+                    int value = v.Value;
+                    prop.Add(key, value);
+                }
+                obj.properties = prop;
+                if (obj != null)
+                {
+                    IManager.Instance.Container.AddObject("BOT"+IManager.Instance.Container.Objects.Count(), obj,
+                        IManager.Instance.Manager.Players.GetCurrentPlayer("Computer"));
+                }
             }
-            obj.properties = prop;
+            
             //obj.name = ob["name"];
 
-            return obj;
+            
         }
     }
 }

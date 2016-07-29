@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -13,7 +14,8 @@ namespace RTS.Abstract
 {
     public class ObjectContainer
     {
-        public Dictionary<string,GameObject> Objects = new Dictionary<string, GameObject>();
+       
+        public ConcurrentDictionary<string,GameObject> Objects = new ConcurrentDictionary<string, GameObject>();
         public GameObject SelectedGameObject { get; set; }
         
         private int objectCount=0;
@@ -35,7 +37,7 @@ namespace RTS.Abstract
 
         public GameObject CheckBullet(GameObject obj1)
         {
-            foreach (var obj in Objects.ToList())
+            foreach (var obj in Objects)
             {
                 if (obj.Value.GetType() == obj1.GetType()) continue;
                 Rectangle area = new Rectangle((int) obj.Value.Coords.X,
@@ -53,7 +55,7 @@ namespace RTS.Abstract
 
         public GameObject CheckCollision(GameObject obj1, Type obj2=null)
         {
-            foreach (var obj in Objects.ToList())
+            foreach (var obj in Objects)
             {
                 if(obj.Value==obj1) continue;
                 if (obj.Value.GetType() != obj2 && obj2 != null) continue;
@@ -76,7 +78,7 @@ namespace RTS.Abstract
 
         public GameObject SelectGameObjectAtAreaToAttack(Rectangle area, Player player)
         {
-            foreach (var obj in Objects.Where(o=>o.Value.Owner!=player).ToList())
+            foreach (var obj in Objects.Where(o=>o.Value.Owner!=player))
             {
                 if (area.Contains(new Rectangle((int) obj.Value.Coords.X, (int)obj.Value.Coords.Y, obj.Value.size.X,
                         obj.Value.size.Y)))
@@ -89,7 +91,7 @@ namespace RTS.Abstract
 
         public GameObject SelectGameObjectAtArea(Rectangle area, Player player)
         {
-            foreach (var obj in Objects.Where(o => o.Value.Owner == player).ToList())
+            foreach (var obj in Objects.Where(o => o.Value.Owner == player))
             {
                 if (area.Contains(new Rectangle((int)obj.Value.Coords.X, (int)obj.Value.Coords.Y, obj.Value.size.X,
                         obj.Value.size.Y)))
@@ -114,7 +116,7 @@ namespace RTS.Abstract
 
         public GameObject SelectGameObjectAtPoint(int x, int y, Player owner, bool ret=false, int sightLine=40)
         {
-            foreach (var obj in Objects.ToList())
+            foreach (var obj in Objects)
             {
                 Rectangle area = new Rectangle((int) obj.Value.Coords.X-sightLine, (int) obj.Value.Coords.Y-sightLine, obj.Value.size.X+sightLine,obj.Value.size.Y+sightLine);
                 if (area.Contains(x, y))
@@ -144,21 +146,21 @@ namespace RTS.Abstract
             obj.Owner = owner;
             obj.targetCoords = pos;
             obj.name = type.BaseType + "" + objectCount++;
-            Objects.Add(obj.name,obj);
+            Objects.TryAdd(obj.name,obj);
             owner.properties["Objects"]++;
             return obj;
         }
 
         public void DeleteObject(GameObject obj)
         {
-            Objects.Remove(obj.name);
+            Objects.TryRemove(obj.name,out obj);
             obj = null;
             GC.Collect();
         }
         public IEnumerable<GameObject> ReturnGameObjectsOfType(Type type)
         {
             List<GameObject> list = new List<GameObject>();
-            foreach (var obj in Objects.ToList())
+            foreach (var obj in Objects)
             {
                 if (obj.Value.GetType() == type)
                 {
@@ -170,7 +172,7 @@ namespace RTS.Abstract
 
         public void UpdateAll()
         {
-            foreach (var obj in Objects.ToList())
+            foreach (var obj in Objects)
             {
                 obj.Value.Update();
             }
@@ -178,7 +180,7 @@ namespace RTS.Abstract
 
         public void DrawAll()
         {
-            foreach (var obj in Objects.ToList())
+            foreach (var obj in Objects)
             {
                 obj.Value.Draw();
             }

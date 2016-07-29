@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.AccessControl;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Xna.Framework;
 
 namespace RTS.Concrete
 {
@@ -27,7 +28,8 @@ namespace RTS.Concrete
            CurrentPlayerID = name;
            players[name] = new Player(name)
            {
-               PlayerID = NextPlayerID++
+               PlayerID = NextPlayerID++,
+               startingPosition = new Vector2(20,300) + new Vector2((NextPlayerID-1)*500,0)
            };
        }
     }

@@ -196,28 +196,18 @@ namespace RTS
                 {
                     s1.SendData(
                         IManager.Instance.Container.Objects.Where(
-                            o => o.Value.Owner == IManager.Instance.Manager.Players.GetCurrentPlayer()));
+                            o => o.Value.Owner == IManager.Instance.Manager.Players.GetCurrentPlayer("kris")));
                     string data = s1.GetDataX();
-                    GameObject x = uncoder.Decoder(data);
-                    if (x != null)
-                    {
-                        IManager.Instance.Container.AddObject("BOT", x,
-                            IManager.Instance.Manager.Players.GetCurrentPlayer("Computer"));
-                    }
+                    uncoder.Decoder(data);
                 }
                 else
                 {
                     client.SendData(
                         IManager.Instance.Container.Objects.Where(
-                            o => o.Value.Owner == IManager.Instance.Manager.Players.GetCurrentPlayer()));
+                            o => o.Value.Owner == IManager.Instance.Manager.Players.GetCurrentPlayer("kris")));
                     client.GetData();
                     string data = client.GetDataX();
-                    GameObject x = uncoder.Decoder(data);
-                    if (x != null)
-                    {
-                        IManager.Instance.Container.AddObject("BOT", x,
-                            IManager.Instance.Manager.Players.GetCurrentPlayer("Computer"));
-                    }
+                    uncoder.Decoder(data);
                 }
             }
         }
