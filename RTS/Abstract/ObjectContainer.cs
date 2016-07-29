@@ -26,8 +26,9 @@ namespace RTS.Abstract
             obj.OwnerID = Owner.PlayerID;
             obj.Owner = Owner;
             obj.name = name;
+            //obj.Coords += IManager.Instance.Manager.Players.GetCurrentPlayer().startingPosition;
             Owner.properties["Objects"]++;
-            Objects[name] = obj;
+            Objects.TryAdd(obj.name, obj);
         }
 
         public GameObject GetGameObject(string name)
@@ -146,6 +147,7 @@ namespace RTS.Abstract
             obj.Owner = owner;
             obj.targetCoords = pos;
             obj.name = type.BaseType + "" + objectCount++;
+            
             Objects.TryAdd(obj.name,obj);
             owner.properties["Objects"]++;
             return obj;

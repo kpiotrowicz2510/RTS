@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -19,6 +20,7 @@ namespace RTS.Multiplayer
         public Status ConnStatus;
         public Socket client;
         private string dataStream;
+        public Uncoder Uncoder;
         public Server( int port)
         {
             ip = new IPEndPoint(IPAddress.Any, port);
@@ -57,12 +59,15 @@ namespace RTS.Multiplayer
             client.Close(); //Close Client
             socket.Close(); //Close socket
         }
-        public void SendData(IEnumerable<KeyValuePair<string, GameObject>> data)
+        public void SendData(ConcurrentDictionary<string, GameObject> data)
         {
             //listSend = data;
             if (ConnStatus == Status.Connected)
             {
-                client.Send(Encoding.ASCII.GetBytes(jsonx.Serialize(data.ToList()) + "#"));
+                try
+                {
+                    client.Send(Encoding.ASCII.GetBytes(jsonx.Serialize(data) + "$"));
+                }catch(Exception e) { }
                 //client.Blocking = true;
             }
         }
@@ -75,18 +80,19 @@ namespace RTS.Multiplayer
                 //client.Blocking = false;
             }
             
-            return dataStream?.Split('#')[0];
+            return dataStream?.Split('$')[0];
         }
         public async void GetData()
         {
             Task<string> task = DataGet(client);
             string data = await task;
             dataStream = data;
+            Uncoder.Decoder(data?.Split('$')[0]);
         }
 
         static async Task<string> DataGet(Socket client)
         {
-            byte[] data = new byte[10096];
+            byte[] data = new byte[4096];
             int receivedDataLength = client.Receive(data);
             string stringData = Encoding.ASCII.GetString(data, 0, receivedDataLength); //Decode the data received
             //Console.WriteLine(stringData); //Write the data on the screen

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -27,7 +28,7 @@ namespace RTS.Multiplayer
         public Socket server = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
         public Status ConnStatus;
         private string dataStream;
-
+        public Uncoder Uncoder;
         public Connection()
         {
             ConnStatus = Status.Disconnected;
@@ -53,13 +54,26 @@ namespace RTS.Multiplayer
                 return;
             }
         }
-
-        public void SendData(IEnumerable<KeyValuePair<string, GameObject>> data)
+        public void End()
+        {
+            server.Close(); //Close Client
+            tcpclnt.Close(); //Close socket
+        }
+        public void SendData(ConcurrentDictionary<string, GameObject> data)
         {
             listSend = data;
             if (ConnStatus == Status.Connected)
             {
-                server.Send(Encoding.ASCII.GetBytes(jsonx.Serialize(data.ToList()) + "#"));
+                try
+                {
+                    server.Send(Encoding.ASCII.GetBytes(jsonx.Serialize(data) + "$"));
+                }
+                catch (Exception e)
+                {
+                    
+                    
+                }
+               
                 //server.Blocking = true;
             }
         }
@@ -72,18 +86,20 @@ namespace RTS.Multiplayer
                 k.Start();
                 //server.Blocking = false;
             }
-            return dataStream?.Split('#')[0];
+            return dataStream?.Split('$')[0];
         }
         public async void GetData()
         {
             Task<string> task = DataGet(server);
             string data = await task;
             dataStream = data;
+            
+            Uncoder.Decoder(data?.Split('$')[0]);
         }
 
         static async Task<string> DataGet(Socket client)
         {
-            byte[] data = new byte[10096];
+            byte[] data = new byte[4096];
             int receivedDataLength = client.Receive(data);
             string stringData = Encoding.ASCII.GetString(data, 0, receivedDataLength); //Decode the data received
             //Console.WriteLine(stringData); //Write the data on the screen

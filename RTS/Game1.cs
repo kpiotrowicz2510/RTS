@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mime;
@@ -67,11 +68,13 @@ namespace RTS
             if (ClientOrServer == 1)
             {
                 s1 = new Server(9999);
+                s1.Uncoder = uncoder;
                 s1.Start();
             }
             else
             {
                 client = new Connection();
+                client.Uncoder = uncoder;
                 client.Connect();
             }
 
@@ -86,6 +89,10 @@ namespace RTS
             spriteFont = Content.Load<SpriteFont>("debug");
 
             manager = new GameManager();
+            string name = Console.ReadLine();
+            IManager.Instance.Manager = manager;
+            manager.PlayerName = name;
+            manager.Initialize();
             collisionControl = new CollisionControl(manager);
            
             textures["GoldMine"] = Content.Load<Texture2D>("GoldMine");
@@ -101,8 +108,9 @@ namespace RTS
             IManager.Instance.GraphicsDevice = GraphicsDevice;
             IManager.Instance.SpriteFont = spriteFont;
             IManager.Instance.SpriteBatch = spriteBatch;
-            IManager.Instance.Manager = manager;
+            
 
+            
             hud = new HUDControl()
             {
                 posPoint = new Vector2(0, 0),
@@ -128,6 +136,14 @@ namespace RTS
         protected override void UnloadContent()
         {
             Content.Unload();
+            if (ClientOrServer == 1)
+            {
+                s1.End();
+            }
+            else
+            {
+                client.End();
+            }
         }
 
         protected override void Update(GameTime gameTime)
@@ -194,20 +210,16 @@ namespace RTS
             {
                 if (ClientOrServer == 1)
                 {
-                    s1.SendData(
-                        IManager.Instance.Container.Objects.Where(
-                            o => o.Value.Owner == IManager.Instance.Manager.Players.GetCurrentPlayer("kris")));
+                    s1.SendData(new ConcurrentDictionary<string, GameObject>(IManager.Instance.Container.Objects.Where(o=>o.Value.Owner==IManager.Instance.Manager.Players.GetCurrentPlayer())));
                     string data = s1.GetDataX();
-                    uncoder.Decoder(data);
+                    //uncoder.Decoder(data);
                 }
                 else
                 {
-                    client.SendData(
-                        IManager.Instance.Container.Objects.Where(
-                            o => o.Value.Owner == IManager.Instance.Manager.Players.GetCurrentPlayer("kris")));
+                    client.SendData(new ConcurrentDictionary<string, GameObject>(IManager.Instance.Container.Objects.Where(o => o.Value.Owner == IManager.Instance.Manager.Players.GetCurrentPlayer())));
                     client.GetData();
                     string data = client.GetDataX();
-                    uncoder.Decoder(data);
+                   // uncoder.Decoder(data);
                 }
             }
         }

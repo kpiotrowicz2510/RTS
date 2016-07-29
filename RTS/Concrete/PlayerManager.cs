@@ -28,9 +28,12 @@ namespace RTS.Concrete
            CurrentPlayerID = name;
            players[name] = new Player(name)
            {
-               PlayerID = NextPlayerID++,
-               startingPosition = new Vector2(20,300) + new Vector2((NextPlayerID-1)*500,0)
+               PlayerID = NextPlayerID++
            };
+           if (name != "Computer")
+           {
+               players[name].startingPosition = new Vector2((Convert.ToInt32(name))*500, 0);
+           }
        }
     }
 }

@@ -17,6 +17,7 @@ namespace RTS.Concrete
 
         public Headquarters Headquarters;
         public Dictionary<string, Texture2D> Textures;
+        public string PlayerName;
         public GameManager()
         {
             ObjectContainer Container = new ObjectContainer();
@@ -25,13 +26,13 @@ namespace RTS.Concrete
             
             Players = new PlayerManager();
             ClickableAreas = new ClickableAreas();
-            this.Initialize();
+
         }
 
-        private void Initialize()
+        public void Initialize()
         {
             Players.AddNewPlayer("Computer");
-            Players.AddNewPlayer("kris");
+            Players.AddNewPlayer(PlayerName);
             
 
             // IManager.Instance.Container.CreateNewObject(typeof(Headquarters), new Vector2(1050, 350), Players.GetCurrentPlayer("Computer"));
@@ -41,7 +42,7 @@ namespace RTS.Concrete
 
             var mine = new GoldMine()
             {
-                Coords = new Vector2(140, 200)
+                Coords = new Vector2(140, 200) + IManager.Instance.Manager.Players.GetCurrentPlayer().startingPosition
             };
 
             IManager.Instance.Container.AddObject("Mine1", mine, Players.GetCurrentPlayer());
@@ -51,7 +52,7 @@ namespace RTS.Concrete
             var HQ = new Headquarters()
             {
                 texture = Color.Brown,
-                Coords = new Vector2(20, 300)
+                Coords = new Vector2(20, 300) + IManager.Instance.Manager.Players.GetCurrentPlayer().startingPosition
             };
             IManager.Instance.Container.AddObject("HQ", HQ, Players.GetCurrentPlayer());
             Headquarters = HQ;
