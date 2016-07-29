@@ -193,10 +193,12 @@ namespace RTS
                     IManager.Instance.Container.SelectedGameObject.targetCoords = new Vector2(mouseState.X, mouseState.Y);
                 }
             }
-            manager.UpdateOrganisms();
-            
-            collisionControl.InvokeActions();
-            
+            try
+            {
+                manager.UpdateOrganisms();
+
+                collisionControl.InvokeActions();
+            }catch(Exception e) { }
             //ai.Update();
 
 
@@ -208,6 +210,7 @@ namespace RTS
         {
             while (true)
             {
+
                 if (ClientOrServer == 1)
                 {
                     s1.SendData(new ConcurrentDictionary<string, GameObject>(IManager.Instance.Container.Objects.Where(o=>o.Value.Owner==IManager.Instance.Manager.Players.GetCurrentPlayer())));
