@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mime;
+using System.Threading;
 using System.Web.Configuration;
 using System.Web.Script.Serialization;
 using Microsoft.Xna.Framework;
@@ -74,6 +75,8 @@ namespace RTS
                 client.Connect();
             }
 
+            
+
             base.Initialize();
         }
 
@@ -117,7 +120,9 @@ namespace RTS
                 controlledPlayer = manager.Players.GetCurrentPlayer("Computer"),
                 GameManager = manager
             };
-            
+
+            Thread t = new Thread(Ter);
+            t.Start();
         }
 
         protected override void UnloadContent()
@@ -172,33 +177,46 @@ namespace RTS
             
             collisionControl.InvokeActions();
             
-            ai.Update();
+            //ai.Update();
 
 
-            //if (gameTime.TotalGameTime.Milliseconds > lastUpdate + 500)
-            //{
-
-            if (ClientOrServer == 1)
-            {
-                //s1.SendData(IManager.Instance.Container.Objects.Where(o => o.Value.Owner == IManager.Instance.Manager.Players.GetCurrentPlayer()));
-               // string data = s1.GetDataX();
-               // uncoder.Decoder(data);
-            }
-            else
-            {
-                client.SendData(
-                    IManager.Instance.Container.Objects.Where(
-                        o => o.Value.Owner == IManager.Instance.Manager.Players.GetCurrentPlayer()));
-                client.GetData();
-            }
-            
-            //Console.WriteLine(ob["name"].ToString());
-            lastUpdate = gameTime.TotalGameTime.Milliseconds;
-           // }
 
             base.Update(gameTime);
         }
 
+        void Ter()
+        {
+            while (true)
+            {
+                if (ClientOrServer == 1)
+                {
+                    s1.SendData(
+                        IManager.Instance.Container.Objects.Where(
+                            o => o.Value.Owner == IManager.Instance.Manager.Players.GetCurrentPlayer()));
+                    string data = s1.GetDataX();
+                    GameObject x = uncoder.Decoder(data);
+                    if (x != null)
+                    {
+                        IManager.Instance.Container.AddObject("BOT", x,
+                            IManager.Instance.Manager.Players.GetCurrentPlayer("Computer"));
+                    }
+                }
+                else
+                {
+                    client.SendData(
+                        IManager.Instance.Container.Objects.Where(
+                            o => o.Value.Owner == IManager.Instance.Manager.Players.GetCurrentPlayer()));
+                    client.GetData();
+                    string data = client.GetDataX();
+                    GameObject x = uncoder.Decoder(data);
+                    if (x != null)
+                    {
+                        IManager.Instance.Container.AddObject("BOT", x,
+                            IManager.Instance.Manager.Players.GetCurrentPlayer("Computer"));
+                    }
+                }
+            }
+        }
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);

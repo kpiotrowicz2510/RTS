@@ -27,7 +27,7 @@ namespace RTS.Multiplayer
             GameObject obj=null;
             dynamic ob = jsonx.DeserializeObject(data);
 
-            string type = ob["ObjType"];
+            string type = ob["ObjType"].ToString();
             switch (type)
             {
                 case "Headquarters":
@@ -47,7 +47,7 @@ namespace RTS.Multiplayer
                     break;
             }
             obj.name = ob["name"];
-            obj.Coords = new Vector2(Convert.ToInt32(ob["Coords"]["X"]), Convert.ToInt32(ob["Coords"]["Y"]));
+            obj.Coords = new Vector2(Convert.ToInt32(ob["Coords"]["X"]), Convert.ToInt32(ob["Coords"]["Y"])) + new Vector2(200,200);
             obj.Owner = IManager.Instance.Manager.Players.GetCurrentPlayer(ob["Owner"]["PlayerName"]);
             //obj.name = ob["name"];
 

@@ -62,14 +62,20 @@ namespace RTS.Multiplayer
             //listSend = data;
             if (ConnStatus == Status.Connected)
             {
-                client.Send(Encoding.ASCII.GetBytes(jsonx.Serialize(data.First().Value)));
+                client.Send(Encoding.ASCII.GetBytes(jsonx.Serialize(data.First().Value) + "#"));
+                //client.Blocking = true;
             }
         }
         public string GetDataX()
         {
-            Task k = new Task(GetData);
-            k.Start();
-            return dataStream;
+            if (ConnStatus == Status.Connected)
+            {
+                Task k = new Task(GetData);
+                k.Start();
+                //client.Blocking = false;
+            }
+            
+            return dataStream?.Split('#')[0];
         }
         public async void GetData()
         {
@@ -80,7 +86,7 @@ namespace RTS.Multiplayer
 
         static async Task<string> DataGet(Socket client)
         {
-            byte[] data = new byte[4096];
+            byte[] data = new byte[25000];
             int receivedDataLength = client.Receive(data);
             string stringData = Encoding.ASCII.GetString(data, 0, receivedDataLength); //Decode the data received
             //Console.WriteLine(stringData); //Write the data on the screen

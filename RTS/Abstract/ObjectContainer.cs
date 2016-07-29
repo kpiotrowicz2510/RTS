@@ -35,7 +35,7 @@ namespace RTS.Abstract
 
         public GameObject CheckBullet(GameObject obj1)
         {
-            foreach (var obj in Objects)
+            foreach (var obj in Objects.ToList())
             {
                 if (obj.Value.GetType() == obj1.GetType()) continue;
                 Rectangle area = new Rectangle((int) obj.Value.Coords.X,
@@ -53,7 +53,7 @@ namespace RTS.Abstract
 
         public GameObject CheckCollision(GameObject obj1, Type obj2=null)
         {
-            foreach (var obj in Objects)
+            foreach (var obj in Objects.ToList())
             {
                 if(obj.Value==obj1) continue;
                 if (obj.Value.GetType() != obj2 && obj2 != null) continue;
@@ -76,7 +76,7 @@ namespace RTS.Abstract
 
         public GameObject SelectGameObjectAtAreaToAttack(Rectangle area, Player player)
         {
-            foreach (var obj in Objects.Where(o=>o.Value.Owner!=player))
+            foreach (var obj in Objects.Where(o=>o.Value.Owner!=player).ToList())
             {
                 if (area.Contains(new Rectangle((int) obj.Value.Coords.X, (int)obj.Value.Coords.Y, obj.Value.size.X,
                         obj.Value.size.Y)))
@@ -89,7 +89,7 @@ namespace RTS.Abstract
 
         public GameObject SelectGameObjectAtArea(Rectangle area, Player player)
         {
-            foreach (var obj in Objects.Where(o => o.Value.Owner == player))
+            foreach (var obj in Objects.Where(o => o.Value.Owner == player).ToList())
             {
                 if (area.Contains(new Rectangle((int)obj.Value.Coords.X, (int)obj.Value.Coords.Y, obj.Value.size.X,
                         obj.Value.size.Y)))
@@ -114,7 +114,7 @@ namespace RTS.Abstract
 
         public GameObject SelectGameObjectAtPoint(int x, int y, Player owner, bool ret=false, int sightLine=40)
         {
-            foreach (var obj in Objects)
+            foreach (var obj in Objects.ToList())
             {
                 Rectangle area = new Rectangle((int) obj.Value.Coords.X-sightLine, (int) obj.Value.Coords.Y-sightLine, obj.Value.size.X+sightLine,obj.Value.size.Y+sightLine);
                 if (area.Contains(x, y))
@@ -158,7 +158,7 @@ namespace RTS.Abstract
         public IEnumerable<GameObject> ReturnGameObjectsOfType(Type type)
         {
             List<GameObject> list = new List<GameObject>();
-            foreach (var obj in Objects)
+            foreach (var obj in Objects.ToList())
             {
                 if (obj.Value.GetType() == type)
                 {
@@ -178,7 +178,7 @@ namespace RTS.Abstract
 
         public void DrawAll()
         {
-            foreach (var obj in Objects)
+            foreach (var obj in Objects.ToList())
             {
                 obj.Value.Draw();
             }

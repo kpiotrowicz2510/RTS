@@ -26,11 +26,11 @@ namespace RTS.Multiplayer
         TcpClient tcpclnt = new TcpClient();
         public Socket server = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
         public Status ConnStatus;
-        
-  
+        private string dataStream;
+
         public Connection()
         {
- 
+            ConnStatus = Status.Disconnected;
         }
 
         public void Close()
@@ -59,27 +59,31 @@ namespace RTS.Multiplayer
             listSend = data;
             if (ConnStatus == Status.Connected)
             {
-                server.Send(Encoding.ASCII.GetBytes(jsonx.Serialize(data.First().Value)));
+                server.Send(Encoding.ASCII.GetBytes(jsonx.Serialize(data.First().Value) + "#"));
+                //server.Blocking = true;
             }
         }
 
-        public IEnumerable<KeyValuePair<string, GameObject>> GetData()
+        public string GetDataX()
         {
-            //Task a = new Task(GetDataX);
-            //a.Start();
-            return listGet;
+            if (ConnStatus == Status.Connected)
+            {
+                Task k = new Task(GetData);
+                k.Start();
+                //server.Blocking = false;
+            }
+            return dataStream?.Split('#')[0];
         }
-
-        async void GetDataX()
+        public async void GetData()
         {
             Task<string> task = DataGet(server);
             string data = await task;
-
+            dataStream = data;
         }
 
         static async Task<string> DataGet(Socket client)
         {
-            byte[] data = new byte[4096];
+            byte[] data = new byte[25000];
             int receivedDataLength = client.Receive(data);
             string stringData = Encoding.ASCII.GetString(data, 0, receivedDataLength); //Decode the data received
             //Console.WriteLine(stringData); //Write the data on the screen
